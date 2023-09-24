@@ -1,0 +1,78 @@
+/*
+6) Construa um programa (main) que aloque em tempo de execução (dinamicamente) uma matriz de
+ordem m x n (linha por coluna), usando 1+m chamadas a função malloc. Agora, aproveite este
+programa para construir uma função que recebendo os parâmetros m e n aloque uma matriz de
+ordem m x n e retorne um ponteiro para esta matriz alocada. Crie ainda uma função para liberar a
+área de memória alocada pela matriz. Finalmente, crie um novo programa (main) que teste/use as
+duas funções criadas acima.
+Desenvolvido por Juliana Apggaua Sant'Ana Vidigal
+Data: 24.09.23
+*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <locale.h>
+
+// Função para alocar uma matriz de ordem m x n e retornar um ponteiro para ela
+int** alocarMatriz(int m, int n) {
+    int** matriz;
+    matriz = (int**)malloc(m * sizeof(int*));
+    if (matriz == NULL) {
+        printf("Erro na alocação de memória para linhas da matriz.\n");
+        exit(1);
+    }
+
+    for (int i = 0; i < m; i++) {
+        matriz[i] = (int*)malloc(n * sizeof(int));
+        if (matriz[i] == NULL) {
+            printf("Erro na alocação de memória para colunas da matriz.\n");
+            exit(1);
+        }
+    }
+
+    return matriz;
+}
+
+// Função para liberar a memória alocada para a matriz
+void liberarMatriz(int** matriz, int m) {
+    for (int i = 0; i < m; i++) {
+        free(matriz[i]);
+    }
+    free(matriz);
+}
+
+int main() {
+    setlocale(LC_ALL, "");
+    int m, n;
+
+    // Solicitar ao usuário as dimensões da matriz
+    printf("Digite o número de linhas da matriz: ");
+    scanf("%d", &m);
+    printf("Digite o número de colunas da matriz: ");
+    scanf("%d", &n);
+
+    // Alocar a matriz dinamicamente
+    int** matriz = alocarMatriz(m, n);
+
+    // Solicitar ao usuário para preencher a matriz
+    printf("Digite os elementos da matriz:\n");
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            printf("[%d][%d]:", i, j);
+            scanf("%d", &matriz[i][j]);
+        }
+    }
+
+    // Imprimir a matriz
+    printf("Matriz digitada:\n");
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            printf("%d ", matriz[i][j]);
+        }
+        printf("\n");
+    }
+
+    // Liberar a memória alocada
+    liberarMatriz(matriz, m);
+
+    return 0;
+}
