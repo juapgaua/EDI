@@ -1,0 +1,94 @@
+/*4) Faça um laço de entrada de dados, onde o usuário deve digitar uma sequência de números, sem
+limite de quantidade de dados a ser fornecida. O usuário irá digitar os números um a um, sendo
+que caso ele deseje encerrar a entrada de dados, ele irá digitar o número Zero. No final, todos os
+dados digitados deverão ser salvos em um arquivo texto em disco. Atenção: os dados devem ser
+armazenados na memória deste modo... faça com que o programa inicie criando um ponteiro para
+um bloco (vetor) de 10 valores inteiros, e alocando dinamicamente espaço em memória para este
+bloco; após, caso o vetor alocado esteja cheio; aloque um novo vetor do tamanho do vetor anterior
+adicionado com espaço para mais 10 valores (tamanho N+10, onde N inicia com 10), copie os
+valores já digitados da área inicial para esta área maior e libere a memória da área inicial; repita
+este procedimento de expandir dinamicamente com mais 10 valores o vetor alocado cada vez que o
+mesmo estiver cheio. Assim o vetor irá ser “expandido” de 10 em 10 valores. Usar a função
+malloc para alocar memória de forma dinâmica.
+Desenvolvido por Juliana Apgaua Sant'Ana Vidigal
+24.09.23
+*/
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <locale.h>
+#define TAM 10
+
+void salvarNumerosEmArquivo(const int *numeros, int contador) {
+    FILE *arquivo = fopen("numeros.txt", "w");
+    if (arquivo == NULL) {
+        printf("Erro ao abrir o arquivo para escrita.\n");
+        exit(1);
+    }
+
+    for (int i = 0; i < contador; i++) {
+        fprintf(arquivo, "%d\n", numeros[i]);
+    }
+
+    fclose(arquivo);
+}
+
+void obterEntradaDoUsuario(int **numeros, int *tamanho, int *contador) {
+    printf("Digite uma sequência de números (digite 0 para encerrar):\n");
+
+    while (1) {
+        int entrada;
+        scanf("%d", &entrada);
+
+        if (entrada == 0) {
+            break;
+        }
+
+        if (*contador == *tamanho) {
+            // Vetor cheio, aloque um novo com mais espaço
+            int novoTamanho = *tamanho + TAM;
+            int *novoVetor = (int *)malloc(novoTamanho * sizeof(int));
+
+            if (novoVetor == NULL) {
+                printf("Erro na alocação de memória.\n");
+                exit(1);
+            }
+
+            // Copie os valores do vetor antigo para o novo vetor
+            for (int i = 0; i < *tamanho; i++) {
+                novoVetor[i] = (*numeros)[i];
+            }
+
+            // Libere a memória do vetor antigo
+            free(*numeros);
+
+            // Atualize o vetor e o tamanho
+            *numeros = novoVetor;
+            *tamanho = novoTamanho;
+        }
+
+        (*numeros)[*contador] = entrada;
+        (*contador)++;
+    }
+}
+
+int main() {
+    setlocale(LC_ALL,"");
+    int *numeros = NULL;
+    int tamanho = TAM;
+    int contador = 0;
+
+    numeros = (int *)malloc(tamanho * sizeof(int));
+    if (numeros == NULL) {
+        printf("Erro na alocação de memória.\n");
+        return 1;
+    }
+
+    obterEntradaDoUsuario(&numeros, &tamanho, &contador);
+    salvarNumerosEmArquivo(numeros, contador);
+    free(numeros);
+
+    printf("Números armazenados em 'numeros.txt'.\n");
+
+    return 0;
+}
