@@ -1,0 +1,75 @@
+//retangulo.h
+#ifndef RETANGULO_H_INCLUDED
+#define RETANGULO_H_INCLUDED
+
+// Definindo a estrutura do Retângulo
+typedef struct {
+    double altura;
+    double largura;
+} Retangulo;
+
+// Funções para operações com retângulo
+int verificarRetangulo(double altura, double largura);
+void inicializarRetangulo(Retangulo *r, double altura, double largura);
+double calcularPerimetro(const Retangulo *r);
+double calcularArea(const Retangulo *r);
+void imprimirRetangulo(const Retangulo *r);
+
+#endif // RETANGULO_H_INCLUDED
+
+//retangulo.c
+#include "retangulo.h"
+#include <stdio.h>
+
+int verificarRetangulo(double altura, double largura) {
+    return (altura > 0 && largura > 0 && altura != largura);
+}
+
+void inicializarRetangulo(Retangulo *r, double altura, double largura) {
+    if (verificarRetangulo(altura, largura)) {
+        r->altura = altura;
+        r->largura = largura;
+    } else {
+        printf("Os valores informados nao formam um retangulo.\n");
+        exit(1);//encerra o programa;
+    }
+}
+
+double calcularPerimetro(const Retangulo *r) {
+    return 2 * (r->altura + r->largura);
+}
+
+double calcularArea(const Retangulo *r) {
+    return r->altura * r->largura;
+}
+
+void imprimirRetangulo(const Retangulo *r) {
+    printf("Altura: %.2lf\n", r->altura);
+    printf("Largura: %.2lf\n", r->largura);
+    printf("Perimetro: %.2lf\n", calcularPerimetro(r));
+    printf("Area: %.2lf\n", calcularArea(r));
+}
+
+//main.c
+#include <stdio.h>
+#include <locale.h>
+#include "retangulo.h"
+
+int main() {
+    setlocale(LC_ALL, "");
+    Retangulo retangulo;
+    double altura, largura;
+
+    printf("Informe a altura do retângulo: ");
+    scanf("%lf", &altura);
+
+    printf("Informe a largura do retângulo: ");
+    scanf("%lf", &largura);
+
+    inicializarRetangulo(&retangulo, altura, largura);
+
+    printf("\nInformações do retângulo:\n");
+    imprimirRetangulo(&retangulo);
+
+    return 0;
+}
