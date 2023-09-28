@@ -1,0 +1,127 @@
+/*2) Faça um TAD triângulo que permita criar, liberar, calcular a área e verificar se os três pontos
+formam um triângulo. Use o TAD Ponto, para armazenar as coordenadas de cada um dos três
+pontos do triângulo.
+Desenvolvido por Juliana Apgaua Sant'Ana Vidigal 
+27/09/2023
+*/
+
+//ponto.h
+
+#ifndef PONTO_H_INCLUDED
+#define PONTO_H_INCLUDED
+
+typedef struct {
+    double x, y;
+} TPonto;
+
+TPonto* criarPonto(double, double);
+void liberarPonto(TPonto*);
+
+#endif // PONTO_H_INCLUDED
+
+//ponto.c
+#include "ponto.h"
+#include <stdlib.h>
+
+TPonto* criarPonto(double x, double y) {
+    TPonto* ponto = (TPonto*)malloc(sizeof(TPonto));
+    if (ponto) {
+        ponto->x = x;
+        ponto->y = y;
+    }
+    return ponto;
+}
+
+void liberarPonto(TPonto* ponto) {
+    free(ponto);
+}
+
+//triangulo.h
+#ifndef TRIANGULO_H_INCLUDED
+#define TRIANGULO_H_INCLUDED
+#include "ponto.h"
+
+typedef struct {
+    TPonto* p1;
+    TPonto* p2;
+    TPonto* p3;
+} Triangulo;
+
+Triangulo* criarTriangulo(TPonto* p1, TPonto* p2, TPonto* p3);
+void liberarTriangulo(Triangulo* triangulo);
+double calcularArea(Triangulo* triangulo);
+int verificarTriangulo(Triangulo* triangulo);
+
+#endif // TRIANGULO_H_INCLUDED
+
+//triangulo.c
+#include "triangulo.h"
+#include <stdlib.h>
+#include <math.h>
+
+Triangulo* criarTriangulo(TPonto* p1, TPonto* p2, TPonto* p3) {
+    Triangulo* triangulo = (Triangulo*)malloc(sizeof(Triangulo));
+    if (triangulo) {
+        triangulo->p1 = p1;
+        triangulo->p2 = p2;
+        triangulo->p3 = p3;
+    }
+    return triangulo;
+}
+
+void liberarTriangulo(Triangulo* triangulo) {
+    liberarPonto(triangulo->p1);
+    liberarPonto(triangulo->p2);
+    liberarPonto(triangulo->p3);
+    free(triangulo);
+}
+
+double calcularArea(Triangulo* triangulo) {
+    double x1 = triangulo->p1->x;
+    double y1 = triangulo->p1->y;
+    double x2 = triangulo->p2->x;
+    double y2 = triangulo->p2->y;
+    double x3 = triangulo->p3->x;
+    double y3 = triangulo->p3->y;
+
+    //Retorna o valor absoluto de x como um número de ponto flutuante do tipo double.
+    return fabs(0.5 * ((x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2))));
+}
+
+int verificarTriangulo(Triangulo* triangulo) {
+    // Verifica se os pontos não são colineares
+    double x1 = triangulo->p1->x;
+    double y1 = triangulo->p1->y;
+    double x2 = triangulo->p2->x;
+    double y2 = triangulo->p2->y;
+    double x3 = triangulo->p3->x;
+    double y3 = triangulo->p3->y;
+
+    return ((x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) != 0.0);
+}
+
+//main.c
+#include <stdio.h>
+#include <locale.h>
+#include "ponto.h"
+#include "triangulo.h"
+
+int main() {
+    setlocale(LC_ALL, "");
+    TPonto* p1 = criarPonto(0.0, 0.0);
+    TPonto* p2 = criarPonto(1.0, 0.0);
+    TPonto* p3 = criarPonto(0.0, 1.0);
+
+    Triangulo* triangulo = criarTriangulo(p1, p2, p3);
+
+    if (verificarTriangulo(triangulo)) {
+        printf("Área do triângulo: %.2lf\n", calcularArea(triangulo));
+    } else {
+        printf("Os pontos não formam um triângulo.\n");
+    }
+
+    liberarTriangulo(triangulo);
+
+    return 0;
+}
+
