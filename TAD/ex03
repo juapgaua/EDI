@@ -1,0 +1,159 @@
+//hora.h
+
+/*
+Implemente um TAD Hora para representar uma hora específica do dia, armazenando horas,
+minutos e segundos como inteiros. As seguintes operações devem ser implementadas:
+a. atribui: Para atribuir valores para os campos (garanta que o horário seja válido, atribuindo valor 0
+para dados inválidos);
+b. avancar: Para avançar no tempo (deste que no intervalo de um dia). Deve ser passado a
+quantidade de segundos a ser acrescentado à data.
+c. comparar: Retorna true se dois horários são iguais e false caso contrário;
+d. imprimir: Para imprimir a hora no formato h:m:s.
+Faça um programa para tstar o TAD.
+Desenvolvido por Juliana Apgaua Sant'Ana Vidigal
+28.09.23
+*/
+
+#ifndef TADHORA_H
+#define TADHORA_H
+
+// Definição da estrutura Hora
+typedef struct Hora *THora;
+
+// Função para criar uma nova Hora dinamicamente
+THora *cria(int, int, int);
+
+// Função para liberar a memória de uma Hora
+void destruirHora(THora);
+
+// Funções para atribuir valores a uma Hora, Minuto e Segundos
+int setHora(THora, int);
+int setMinuto(THora, int);
+int setSegundo(THora, int);
+int getHora(THora);
+int getMinuto(THora);
+int getSegundo(THora);
+// Função para avançar no tempo
+void avancar(THora);
+
+// Função para comparar duas Horas e verificar se são iguais
+int comparar(THora, THora);
+
+#endif
+
+//hora.c
+
+#include "hora.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Hora{
+    int hora, minuto, segundo;
+};
+
+// Função para criar uma nova Hora dinamicamente
+THora *cria(int s, int m, int h) {
+    THora hora = (THora)malloc(sizeof(THora));
+    if (hora){
+        if((s>=0 && s<=59)&&(m>=0 &&m<=59)&&(h>=0 && h<=23)){
+        hora->hora=h;
+        hora->minuto=m;
+        hora->segundo=s;
+        }
+            else{
+                hora->hora=0;
+                hora->minuto=0;
+                hora->segundo=0;
+                }
+    return hora;
+    }
+}
+
+void destroi(THora argH){
+    free(argH);
+}
+
+int setHora(THora argH, int h){
+    if(h>=0 && h<24){
+        argH->hora=h;
+        return 1;
+    }
+    return 0;
+}
+
+int setMinuto(THora argH, int m){
+    if(m>=0 && m<60){
+        argH->minuto=m;
+        return 1;
+    }
+    return 0;
+}
+
+int setSegundo(THora argH, int s){
+    if(s>=0 && s<60){
+        argH->segundo=s;
+        return 1;
+    }
+    return 0;
+}
+
+int getHora(THora argH){
+    return argH->hora;
+}
+
+int getMinuto(THora argH){
+    return argH->minuto;
+}
+
+int getSegundo(THora argH){
+    return argH->segundo;
+}
+
+void avancar(THora argH){
+    argH->segundo++;
+        if(argH->segundo==60){
+            argH->segundo=0;
+            argH->minuto++;
+                }if(argH->minuto==60){
+                    argH->minuto=0;
+                    argH->hora++;
+                    }if(argH->hora==24)
+                        argH->hora=0;
+
+}
+
+int comparar(THora argH1, THora argH2){
+    return argH1->hora==argH2->hora && argH1->minuto==argH2->minuto &&argH1->segundo==argH2->segundo;
+}
+
+//main.c
+
+#include "hora.h"
+#include <stdio.h>
+#include <locale.h>
+
+int main() {
+    setlocale(LC_ALL, "");
+
+    THora th;
+    th=cria(10, 30, 15);
+        if(th){
+            printf("\nHora Atual: ");
+            printf("%d:%d:%d\n", getHora(th), getMinuto(th), getSegundo(th));
+
+            setSegundo(th, 11);
+            printf("\nHora Alterada: ");
+            printf("%d:%d:%d\n", getHora(th), getMinuto(th), getSegundo(th));
+            avancar(th);
+                for(int i=0; i<=30; i++){
+                    avancar(th);
+                    printf("\nHora Alterada após Avançar: ");
+                    printf("%d:%d:%d\n", getHora(th), getMinuto(th), getSegundo(th));
+                    destroi(th);
+                }
+            destroi(th);
+        }
+    return 0;
+}
+
+
