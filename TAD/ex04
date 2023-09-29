@@ -1,1 +1,150 @@
+//data.h
 
+/*4) Implemente também um TAD Data para representar uma data específica do ano, armazenando
+dia, mês e ano como inteiros. As seguintes operações devem ser implementadas:
+a. atribui: Para atribuir valores para os campos (garanta que a data seja válida, retornado 1 se a data
+for válida e false em caso contrário).
+b. inc: aumentar a data em um dia;
+c. dec: diminuir a data em um dia;
+d. comparar: retorna true se duas datas são iguais e false caso contrário;
+e. get: retorna a data no formato d/m/a.
+Em seguida, faça um programa para testar o seu TAD.
+Desenvolvido por Juliana Apgaua Sant'Ana Vidigal*/
+
+#ifndef DATA_H
+#define DATA_H
+
+typedef struct {
+    int dia;
+    int mes;
+    int ano;
+} Data;
+
+int validarData(Data data);
+int atribuirData(Data *data, int dia, int mes, int ano);
+void incrementarData(Data *data);
+void decrementarData(Data *data);
+int compararDatas(Data data1, Data data2);
+void getDataFormatada(Data data, char *formato);
+
+#endif
+
+//data.c
+
+#include "data.h"
+#include <stdbool.h>
+#include <stdio.h>
+
+int validarData(Data data) {
+    if (data.ano < 1 || data.mes < 1 || data.mes > 12 || data.dia < 1)
+        return 0;
+
+    int diasNoMes[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+    if ((data.ano % 4 == 0 && data.ano % 100 != 0) || data.ano % 400 == 0) {
+        diasNoMes[2] = 29; // Ano bissexto
+    }
+
+    if (data.dia > diasNoMes[data.mes])
+        return 0;
+
+    return 1;
+}
+
+int atribuirData(Data *data, int dia, int mes, int ano) {
+    data->dia = dia;
+    data->mes = mes;
+    data->ano = ano;
+
+    if (validarData(*data))
+        return 1;
+    else
+        return 0;
+}
+
+void incrementarData(Data *data) {
+    if (validarData(*data)) {
+        int diasNoMes[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+        if ((data->ano % 4 == 0 && data->ano % 100 != 0) || data->ano % 400 == 0) {
+            diasNoMes[2] = 29; // Ano bissexto
+        }
+
+        data->dia++;
+
+        if (data->dia > diasNoMes[data->mes]) {
+            data->dia = 1;
+            data->mes++;
+            if (data->mes > 12) {
+                data->mes = 1;
+                data->ano++;
+            }
+        }
+    }
+}
+
+void decrementarData(Data *data) {
+    if (validarData(*data)) {
+        int diasNoMes[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+        if ((data->ano % 4 == 0 && data->ano % 100 != 0) || data->ano % 400 == 0) {
+            diasNoMes[2] = 29; // Ano bissexto
+        }
+
+        data->dia--;
+
+        if (data->dia < 1) {
+            data->mes--;
+            if (data->mes < 1) {
+                data->mes = 12;
+                data->ano--;
+            }
+            data->dia = diasNoMes[data->mes];
+        }
+    }
+}
+
+int compararDatas(Data data1, Data data2) {
+    if (data1.dia == data2.dia && data1.mes == data2.mes && data1.ano == data2.ano)
+        return 1;
+    else
+        return 0;
+}
+
+void getDataFormatada(Data data, char *formato) {
+    sprintf(formato, "%d/%d/%d", data.dia, data.mes, data.ano);
+}
+//main.c
+#include <stdio.h>
+#include "data.h"
+
+int main() {
+    Data minhaData;
+    char dataFormatada[12]; // Para armazenar a data formatada (dd/mm/aaaa)
+
+    if (atribuirData(&minhaData, 31, 12, 2023)) {
+        printf("Data atribuída com sucesso!\n");
+
+        getDataFormatada(minhaData, dataFormatada);
+        printf("Data atual: %s\n", dataFormatada);
+
+        incrementarData(&minhaData);
+        getDataFormatada(minhaData, dataFormatada);
+        printf("Data incrementada: %s\n", dataFormatada);
+
+        atribuirData(&minhaData, 31, 12, 2023);
+        decrementarData(&minhaData);
+        getDataFormatada(minhaData, dataFormatada);
+        printf("Data decrementada: %s\n", dataFormatada);
+
+        Data outraData = {28, 9, 2023};
+        if (compararDatas(minhaData, outraData))
+            printf("As datas são iguais.\n");
+        else
+            printf("As datas são diferentes.\n");
+    } else {
+        printf("Data inválida!\n");
+    }
+
+    return 0;
+}
