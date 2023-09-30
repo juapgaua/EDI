@@ -1,0 +1,137 @@
+//racional.h
+
+/*
+6) Crie um TAD que represente os numeros racionais e que possua as seguintes funções:
+a) cria racional;
+b) destroi racional;
+c) soma racionais;
+d) multiplica racionais;
+e) subtrae racionais;
+f) divide racionais;
+g) testa se sao iguais.
+
+Desenvolvido por Juliana Apggaua Sant'Ana Vidigal
+30/09/2023
+*/
+
+#ifndef RACIONAL_H_INCLUDED
+#define RACIONAL_H_INCLUDED
+
+
+typedef struct Racional {
+    int numerador;
+    int denominador;
+} Racional;
+
+Racional* criaRacional(int numerador, int denominador);
+void destroiRacional(Racional* racional);
+Racional* somaRacionais(const Racional* racional1, const Racional* racional2);
+Racional* multiplicaRacionais(const Racional* racional1, const Racional* racional2);
+Racional* subtraiRacionais(const Racional* racional1, const Racional* racional2);
+Racional* divideRacionais(const Racional* racional1, const Racional* racional2);
+int saoIguais(const Racional* racional1, const Racional* racional2);
+
+
+#endif // RACIONAL_H_INCLUDED
+
+//racional.c
+
+#include "racional.h"
+#include <stdlib.h>
+
+// Função auxiliar para calcular o máximo divisor comum (MDC)
+int mdc(int a, int b) {
+    if (b == 0) return a;
+    return mdc(b, a % b);
+}
+
+// Função para criar um número racional
+Racional* criaRacional(int numerador, int denominador) {
+    Racional* novoRacional = (Racional*)malloc(sizeof(Racional));
+
+    if (novoRacional != NULL) {
+        int divisor = mdc(numerador, denominador);
+        novoRacional->numerador = numerador / divisor;
+        novoRacional->denominador = denominador / divisor;
+    }
+
+    return novoRacional;
+}
+
+// Função para destruir um número racional
+void destroiRacional(Racional* racional) {
+    free(racional);
+}
+
+// Função para somar dois números racionais
+Racional* somaRacionais(const Racional* racional1, const Racional* racional2) {
+    int novoNumerador = racional1->numerador * racional2->denominador + racional2->numerador * racional1->denominador;
+    int novoDenominador = racional1->denominador * racional2->denominador;
+    return criaRacional(novoNumerador, novoDenominador);
+}
+
+// Função para multiplicar dois números racionais
+Racional* multiplicaRacionais(const Racional* racional1, const Racional* racional2) {
+    int novoNumerador = racional1->numerador * racional2->numerador;
+    int novoDenominador = racional1->denominador * racional2->denominador;
+    return criaRacional(novoNumerador, novoDenominador);
+}
+
+// Função para subtrair dois números racionais
+Racional* subtraiRacionais(const Racional* racional1, const Racional* racional2) {
+    int novoNumerador = racional1->numerador * racional2->denominador - racional2->numerador * racional1->denominador;
+    int novoDenominador = racional1->denominador * racional2->denominador;
+    return criaRacional(novoNumerador, novoDenominador);
+}
+
+// Função para dividir dois números racionais
+Racional* divideRacionais(const Racional* racional1, const Racional* racional2) {
+    int novoNumerador = racional1->numerador * racional2->denominador;
+    int novoDenominador = racional1->denominador * racional2->numerador;
+
+    if (novoDenominador == 0) {
+        return NULL; // Divisão por zero não é definida
+    }
+
+    return criaRacional(novoNumerador, novoDenominador);
+}
+
+// Função para testar se dois números racionais são iguais
+int saoIguais(const Racional* racional1, const Racional* racional2) {
+    return (racional1->numerador == racional2->numerador) && (racional1->denominador == racional2->denominador);
+}
+
+//main.c
+
+#include <stdio.h>
+#include "racional.h"
+
+int main() {
+    Racional* r1 = criaRacional(3, 4);
+    Racional* r2 = criaRacional(1, 2);
+
+    Racional* soma = somaRacionais(r1, r2);
+    Racional* produto = multiplicaRacionais(r1, r2);
+    Racional* subtracao = subtraiRacionais(r1, r2);
+    Racional* divisao = divideRacionais(r1, r2);
+
+    printf("Soma: %d/%d\n", soma->numerador, soma->denominador);
+    printf("Produto: %d/%d\n", produto->numerador, produto->denominador);
+    printf("Subtracao: %d/%d\n", subtracao->numerador, subtracao->denominador);
+    printf("Divisao: %d/%d\n", divisao->numerador, divisao->denominador);
+
+    if (saoIguais(r1, r2)) {
+        printf("Os racionais sao iguais.\n");
+    } else {
+        printf("Os racionais nao sao iguais.\n");
+    }
+
+    destroiRacional(r1);
+    destroiRacional(r2);
+    destroiRacional(soma);
+    destroiRacional(produto);
+    destroiRacional(subtracao);
+    destroiRacional(divisao);
+
+    return 0;
+}
