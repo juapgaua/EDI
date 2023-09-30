@@ -1,0 +1,115 @@
+//numComplexo.h
+/*
+5) Implemente um TAD Número Complexo. Cada número possui os campos real e imaginário.
+Implemente as operações:
+a) criar um numero complexo;
+b) destruir um numero complexo;
+c) soma de dois numeros complexos;
+d)subtração de dois números complexos;
+e) mutiplicação de dois números complexos;
+f) divisao de dois números complexos;
+Desenvolvido por Juliana Apgaua Sant'Ana Vidigal
+30/09/2023
+*/
+
+#ifndef NUMCOMPLEXO_H_INCLUDED
+#define NUMCOMPLEXO_H_INCLUDED
+
+typedef struct {
+    double real;
+    double imaginario;
+} NumComplexo;
+
+NumComplexo* criarNumComplexo(double real, double imaginario);
+void destruirNumComplexo(NumComplexo* num);
+NumComplexo* somarComplexos(const NumComplexo* num1, const NumComplexo* num2);
+NumComplexo* subtrairComplexos(const NumComplexo* num1, const NumComplexo* num2);
+NumComplexo* multiplicarComplexos(const NumComplexo* num1, const NumComplexo* num2);
+NumComplexo* dividirComplexos(const NumComplexo* num1, const NumComplexo* num2);
+
+
+#endif // NUMCOMPLEXO_H_INCLUDED
+
+//numComplexo.c
+#include <stdio.h>
+#include <stdlib.h>
+#include "numComplexo.h"
+
+NumComplexo* criarNumComplexo(double real, double imaginario) {
+    NumComplexo* num = (NumComplexo*)malloc(sizeof(NumComplexo));
+    if (num != NULL) {
+        num->real = real;
+        num->imaginario = imaginario;
+    }
+    return num;
+}
+
+void destruirNumComplexo(NumComplexo* num) {
+    free(num);
+}
+
+NumComplexo* somarComplexos(const NumComplexo* num1, const NumComplexo* num2) {
+    NumComplexo* resultado = (NumComplexo*)malloc(sizeof(NumComplexo));
+    if (resultado != NULL) {
+        resultado->real = num1->real + num2->real;
+        resultado->imaginario = num1->imaginario + num2->imaginario;
+    }
+    return resultado;
+}
+
+NumComplexo* subtrairComplexos(const NumComplexo* num1, const NumComplexo* num2) {
+    NumComplexo* resultado = (NumComplexo*)malloc(sizeof(NumComplexo));
+    if (resultado != NULL) {
+        resultado->real = num1->real - num2->real;
+        resultado->imaginario = num1->imaginario - num2->imaginario;
+    }
+    return resultado;
+}
+
+NumComplexo* multiplicarComplexos(const NumComplexo* num1, const NumComplexo* num2) {
+    NumComplexo* resultado = (NumComplexo*)malloc(sizeof(NumComplexo));
+    if (resultado != NULL) {
+        resultado->real = (num1->real * num2->real) - (num1->imaginario * num2->imaginario);
+        resultado->imaginario = (num1->real * num2->imaginario) + (num1->imaginario * num2->real);
+    }
+    return resultado;
+}
+
+NumComplexo* dividirComplexos(const NumComplexo* num1, const NumComplexo* num2) {
+    NumComplexo* resultado = (NumComplexo*)malloc(sizeof(NumComplexo));
+    if (resultado != NULL) {
+        double divisor = (num2->real * num2->real) + (num2->imaginario * num2->imaginario);
+        resultado->real = ((num1->real * num2->real) + (num1->imaginario * num2->imaginario)) / divisor;
+        resultado->imaginario = ((num1->imaginario * num2->real) - (num1->real * num2->imaginario)) / divisor;
+    }
+    return resultado;
+}
+
+//main.c
+#include <stdio.h>
+#include "numComplexo.h"
+
+int main() {
+    NumComplexo* num1 = criarNumComplexo(3.0, 4.0);
+    NumComplexo* num2 = criarNumComplexo(1.0, -2.0);
+
+    NumComplexo* soma = somarComplexos(num1, num2);
+    NumComplexo* subtracao = subtrairComplexos(num1, num2);
+    NumComplexo* multiplicacao = multiplicarComplexos(num1, num2);
+    NumComplexo* divisao = dividirComplexos(num1, num2);
+
+    printf("Soma: %.2lf + %.2lfi\n", soma->real, soma->imaginario);
+    printf("Subtracao: %.2lf + %.2lfi\n", subtracao->real, subtracao->imaginario);
+    printf("Multiplicacao: %.2lf + %.2lfi\n", multiplicacao->real, multiplicacao->imaginario);
+    printf("Divisao: %.2lf + %.2lfi\n", divisao->real, divisao->imaginario);
+
+    destruirNumComplexo(num1);
+    destruirNumComplexo(num2);
+    destruirNumComplexo(soma);
+    destruirNumComplexo(subtracao);
+    destruirNumComplexo(multiplicacao);
+    destruirNumComplexo(divisao);
+
+    return 0;
+}
+
