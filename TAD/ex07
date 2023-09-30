@@ -1,0 +1,314 @@
+//conjunto.h
+
+/*
+7) Implemente um TAD para representar conjuntos de elemento inteiros. Seu tipo abstrato deverá
+armazenar os elemenyos(números inteiros) do conjunto e o número de elementos n. Considere que o
+tamanho máximo de um conjunto é limitado pela memória principal (você deverá usar alocação dinâmica)
+e deve crescer de 10 em 10 elementos. Use arranjos unidimensionais (vetores) para implementar o TAD.
+Por exemplo, considerando que o seu conjunto armazena os elementos 5, 2, 3, 9, e 1, seu TAD deverá ter a
+seguinte estrutura:
+elementos
+n = 5
+obs.
+a) Guarde o tamanho atual do vetor;
+b) Lembre-se ainda que segundo a definição de conjuntos os elementos são únicos, ou seja, seu TAD deve
+impedir a existência de elementos repetidos.
+As operações que devem ser realizadas em seu TAD são:
+a) criar um conjunto vazio;
+b) detroi o conjunto;
+c) inserir um elemento no conjunto, retornando 1 se possível e 0 senão;
+d) excluir um elemento do conjunto, retornando 1 se realizado e 0 senão;
+e) recuperar elemento de uma posição do conjunto, retornando em 1 caso de sucesso e 0 em caso contrário;
+f) testar se um elemento está presente no conjunto, retornando sua posição ou -1 se não estiver presente;
+g) comparar 2 conjuntos, retornando 1 se são iguais e 0 se são diferentes;
+h) realizar a união de dois conjuntos e retornar o conjunto obtido;
+i) realizar a interção de dois conjuntos e retornar o conjunto gerado;
+j) subtrar dois conjuntos A e B e retornar o conjunto obtido.
+Faça um programa para testar as operações do TAD desenvolvido.
+
+Desenvolvido por Juliana Apgaua Sant'Ana Vidigal
+30.09.2023
+*/
+
+
+#ifndef CONJUNTO_H_INCLUDED
+#define CONJUNTO_H_INCLUDED
+
+typedef struct {
+    int *elementos;
+    int tamanho;
+    int capacidade;
+} Conjunto;
+
+Conjunto *criarConjunto();
+void destruirConjunto(Conjunto *conj);
+int inserirElemento(Conjunto *conj, int elemento);
+int excluirElemento(Conjunto *conj, int elemento);
+int recuperarElemento(Conjunto *conj, int posicao, int *elemento);
+int buscarElemento(Conjunto *conj, int elemento);
+int compararConjuntos(Conjunto *conj1, Conjunto *conj2);
+Conjunto *uniaoConjuntos(Conjunto *conj1, Conjunto *conj2);
+Conjunto *intersecaoConjuntos(Conjunto *conj1, Conjunto *conj2);
+Conjunto *subtracaoConjuntos(Conjunto *conj1, Conjunto *conj2);
+
+#endif // CONJUNTO_H_INCLUDED
+
+//conjunto.c
+
+#include <stdio.h>
+#include <stdlib.h>
+#include "conjunto.h"
+
+Conjunto *criarConjunto() {
+    Conjunto *conj = (Conjunto *)malloc(sizeof(Conjunto));
+    if (conj == NULL) {
+        return NULL;
+    }
+
+    conj->elementos = (int *)malloc(sizeof(int) * 10);
+    if (conj->elementos == NULL) {
+        free(conj);
+        return NULL;
+    }
+
+    conj->tamanho = 0;
+    conj->capacidade = 10;
+    return conj;
+}
+
+void destruirConjunto(Conjunto *conj) {
+    if (conj != NULL) {
+        free(conj->elementos);
+        free(conj);
+    }
+}
+
+int inserirElemento(Conjunto *conj, int elemento) {
+    if (buscarElemento(conj, elemento) != -1) {
+        return 0; // Elemento já existe no conjunto
+    }
+
+    if (conj->tamanho == conj->capacidade) {
+        int *novoElementos = (int *)realloc(conj->elementos, sizeof(int) * (conj->capacidade + 10));
+        if (novoElementos == NULL) {
+            return 0; // Falha na realocação de memória
+        }
+        conj->elementos = novoElementos;
+        conj->capacidade += 10;
+    }
+
+    conj->elementos[conj->tamanho] = elemento;
+    conj->tamanho++;
+    return 1; // Inserção bem-sucedida
+}
+
+int excluirElemento(Conjunto *conj, int elemento) {
+    int posicao = buscarElemento(conj, elemento);
+    if (posicao == -1) {
+        return 0; // Elemento não encontrado no conjunto
+    }
+
+    for (int i = posicao; i < conj->tamanho - 1; i++) {
+        conj->elementos[i] = conj->elementos[i + 1];
+    }
+
+    conj->tamanho--;
+    return 1; // Exclusão bem-sucedida
+}
+
+int recuperarElemento(Conjunto *conj, int posicao, int *elemento) {
+    if (posicao < 0 || posicao >= conj->tamanho) {
+        return 0; // Posição inválida
+    }
+
+    *elemento = conj->elementos[posicao];
+    return 1; // Recuperação bem-sucedida
+}
+
+int buscarElemento(Conjunto *conj, int elemento) {
+    for (int i = 0; i < conj->tamanho; i++) {
+        if (conj->elementos[i] == elemento) {
+            return i; // Elemento encontrado na posição i
+        }
+    }
+    return -1; // Elemento não encontrado no conjunto
+}
+
+int compararConjuntos(Conjunto *conj1, Conjunto *conj2) {
+    if (conj1->tamanho != conj2->tamanho) {
+        return 0; // Conjuntos têm tamanhos diferentes, portanto, são diferentes
+    }
+
+    for (int i = 0; i < conj1->tamanho; i++) {
+        if (buscarElemento(conj2, conj1->elementos[i]) == -1) {
+            return 0; // Elemento em conj1 não encontrado em conj2, portanto, são diferentes
+        }
+    }
+
+    return 1; // Conjuntos são iguais
+}
+
+Conjunto *uniaoConjuntos(Conjunto *conj1, Conjunto *conj2) {
+    Conjunto *uniao = criarConjunto();
+
+    for (int i = 0; i < conj1->tamanho; i++) {
+        inserirElemento(uniao, conj1->elementos[i]);
+    }
+
+    for (int i = 0; i < conj2->tamanho; i++) {
+        inserirElemento(uniao, conj2->elementos[i]);
+    }
+
+    return uniao;
+}
+
+Conjunto *intersecaoConjuntos(Conjunto *conj1, Conjunto *conj2) {
+    Conjunto *intersecao = criarConjunto();
+
+    for (int i = 0; i < conj1->tamanho; i++) {
+        if (buscarElemento(conj2, conj1->elementos[i]) != -1) {
+            inserirElemento(intersecao, conj1->elementos[i]);
+        }
+    }
+
+    return intersecao;
+}
+
+Conjunto *subtracaoConjuntos(Conjunto *conj1, Conjunto *conj2) {
+    Conjunto *subtracao = criarConjunto();
+
+    for (int i = 0; i < conj1->tamanho; i++) {
+        if (buscarElemento(conj2, conj1->elementos[i]) == -1) {
+            inserirElemento(subtracao, conj1->elementos[i]);
+        }
+    }
+
+    return subtracao;
+}
+
+//main.c
+
+#include <stdio.h>
+#include "conjunto.h"
+#include <locale.h>
+
+int main() {
+    setlocale(LC_ALL, "");
+    Conjunto *conj1 = criarConjunto();
+    Conjunto *conj2 = criarConjunto();
+
+    int elemento;
+    int continuarInsercao = 1;
+
+    printf("Inserir elementos no Conjunto 1 (Digite -1 para parar):\n");
+    while (continuarInsercao) {
+        printf("Digite um elemento: ");
+        scanf("%d", &elemento);
+        if (elemento == -1) {
+            continuarInsercao = 0;
+        } else {
+            inserirElemento(conj1, elemento);
+        }
+    }
+
+    continuarInsercao = 1;
+    printf("Inserir elementos no Conjunto 2 (Digite -1 para parar):\n");
+    while (continuarInsercao) {
+        printf("Digite um elemento: ");
+        scanf("%d", &elemento);
+        if (elemento == -1) {
+            continuarInsercao = 0;
+        } else {
+            inserirElemento(conj2, elemento);
+        }
+    }
+
+    printf("Conjunto 1: {");
+    for (int i = 0; i < conj1->tamanho; i++) {
+        printf("%d", conj1->elementos[i]);
+        if (i < conj1->tamanho - 1) {
+            printf(", ");
+        }
+    }
+    printf("}\n");
+
+    printf("Conjunto 2: {");
+    for (int i = 0; i < conj2->tamanho; i++) {
+        printf("%d", conj2->elementos[i]);
+        if (i < conj2->tamanho - 1) {
+            printf(", ");
+        }
+    }
+    printf("}\n");
+
+    printf("União: ");
+    Conjunto *uniao = uniaoConjuntos(conj1, conj2);
+    for (int i = 0; i < uniao->tamanho; i++) {
+        printf("%d", uniao->elementos[i]);
+        if (i < uniao->tamanho - 1) {
+            printf(", ");
+        }
+    }
+    printf("\n");
+
+    printf("Interseção: ");
+    Conjunto *intersecao = intersecaoConjuntos(conj1, conj2);
+    for (int i = 0; i < intersecao->tamanho; i++) {
+        printf("%d", intersecao->elementos[i]);
+        if (i < intersecao->tamanho - 1) {
+            printf(", ");
+        }
+    }
+    printf("\n");
+
+    printf("Subtração (conj1 - conj2): ");
+    Conjunto *subtracao = subtracaoConjuntos(conj1, conj2);
+    for (int i = 0; i < subtracao->tamanho; i++) {
+        printf("%d", subtracao->elementos[i]);
+        if (i < subtracao->tamanho - 1) {
+            printf(", ");
+        }
+    }
+    printf("\n");
+
+    int saoIguais = compararConjuntos(conj1, conj2);
+    if (saoIguais) {
+        printf("Os conjuntos 1 e 2 são iguais.\n");
+    } else {
+        printf("Os conjuntos 1 e 2 são diferentes.\n");
+    }
+
+    int elementoParaBuscar = 7; // Substitua pelo elemento que você deseja buscar
+    int posicao = buscarElemento(conj1, elementoParaBuscar);
+        if (posicao != -1) {
+            printf("O elemento %d está presente na posição %d do Conjunto 1.\n", elementoParaBuscar, posicao);
+        } else {
+            printf("O elemento %d não foi encontrado no Conjunto 1.\n", elementoParaBuscar);
+            }
+
+    int elementoParaExcluir = 3; // Substitua pelo elemento que você deseja excluir
+    int removido = excluirElemento(conj1, elementoParaExcluir);
+        if (removido) {
+            printf("O elemento %d foi removido com sucesso do Conjunto 1.\n", elementoParaExcluir);
+        } else {
+            printf("O elemento %d não foi encontrado no Conjunto 1 e não pôde ser removido.\n", elementoParaExcluir);
+        }
+
+    int posicaoParaRecuperar = 2; // Substitua pela posição que você deseja recuperar
+    int elementoRecuperado;
+    int recuperado = recuperarElemento(conj1, posicaoParaRecuperar, &elementoRecuperado);
+        if (recuperado) {
+            printf("O elemento na posição %d do Conjunto 1 é: %d\n", posicaoParaRecuperar, elementoRecuperado);
+        } else {
+            printf("A posição %d é inválida ou vazia no Conjunto 1.\n", posicaoParaRecuperar);
+        }
+
+    destruirConjunto(conj1);
+    destruirConjunto(conj2);
+    destruirConjunto(uniao);
+    destruirConjunto(intersecao);
+    destruirConjunto(subtracao);
+
+    return 0;
+}
+
