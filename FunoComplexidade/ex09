@@ -1,0 +1,35 @@
+void insertsort(int A[n], int n){
+ int j;
+ for (int i = 1; i < n; i++){
+ aux = A[i];
+ j = i - 1;
+ while ((j >= 0) && (aux < v[j])){
+ v[j + 1] = v[j];
+ j--;
+ }
+ v[j + 1] = aux;
+ }
+}
+/*
+A função insertsort implementa o algoritmo de ordenação conhecido como "Insertion Sort" 
+para ordenar um array de inteiros A com n elementos.
+
+Pior Caso:
+No pior caso, o array está completamente reverso, e o algoritmo precisa realizar várias comparações e trocas em cada iteração. 
+O número máximo de iterações é n - 1, onde n é o tamanho do array.
+Em cada iteração, o algoritmo compara o elemento atual (aux) com os elementos anteriores no subarray ordenado e move os elementos
+maiores uma posição à frente para acomodar o elemento atual. 
+O número de comparações e trocas aumenta linearmente com o tamanho do array, 
+resultando em uma complexidade de tempo no pior caso de O(n^2) - quadrática.
+
+Melhor Caso:
+No melhor caso, o array já está completamente ordenado, e o algoritmo precisa fazer apenas uma comparação em cada iteração
+para determinar que o elemento atual já está no lugar certo. 
+Isso resulta em um número de comparações igual a n - 1. 
+Portanto, a complexidade de tempo no melhor caso é O(n) - linear.
+
+Caso Médio:
+O caso médio para o Insertion Sort também é O(n^2), pois o algoritmo realiza um número semelhante de comparações e trocas, 
+independentemente da distribuição dos valores no array. O número de comparações e trocas pode variar ligeiramente 
+dependendo da distribuição dos valores, mas o algoritmo é geralmente sensível ao grau de desordem no array.
+*/
