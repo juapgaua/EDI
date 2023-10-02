@@ -1,0 +1,40 @@
+/*
+1) Dada a função x:
+int x(int n, int m){
+if (n==m || n=0)
+return 1;
+else
+return x(n-1, m)+x(n-1,m+1)
+}
+a) qual o valor de x(5,3) ?
+
+Para calcular o valor de x(5,3), basta chamar a função com esses valores e seguir a recursão:
+
+x(5,3) = x(4,3) + x(4,4)
+x(4,3) = x(3,3) + x(3,4)
+x(3,3) = 1 (pois n é igual a m)
+x(3,4) = x(2,4) + x(2,5)
+x(2,4) = x(1,4) + x(1,5)
+x(1,4) = 1 (pois n é igual a m)
+x(1,5) = 1 (pois n é igual a m)
+
+Agora, podemos voltar a calcular os valores anteriores:
+
+x(2,4) = 1 + 1 = 2
+x(2,5) = 1 + 1 = 2
+x(3,4) = 2 + 2 = 4
+x(4,3) = 1 + 4 = 5
+x(4,4) = 1 + 1 = 2
+x(5,3) = 5 + 2 = 7
+
+Portanto, o valor de x(5,3) é 7.
+
+b) quantas chamadas serão feitas na avaliação acima ?
+Para calcular o número de chamadas, podemos contar quantas vezes a função é chamada em cada etapa da recursão. Vamos calcular:
+
+x(5,3) chama x(4,3) e x(4,4) (duas chamadas).
+x(4,3) chama x(3,3) e x(3,4) (duas chamadas).
+x(3,4) chama x(2,4) e x(2,5) (duas chamadas).
+x(2,4) chama x(1,4) e x(1,5) (duas chamadas).
+Então, na avaliação de x(5,3), serão feitas 8 chamadas.
+*/
