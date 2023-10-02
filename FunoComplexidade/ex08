@@ -1,0 +1,40 @@
+void selectsort (int A[n] , int n){
+ int i,j,min;
+ int aux;
+ for (i = 0 ; i < n - 1 ; i++){
+ min = i;
+ for (j = i + 1 ; j < n ; j++)
+ if (A[j] < A[min])
+ min = j;
+ aux = A[min];
+ A[min] = A[i];
+ A[i] = aux;
+ }
+}
+
+/*
+A função selectsort implementa o algoritmo de ordenação conhecido como "Selection Sort" para ordenar um array de inteiros A 
+com n elementos.
+
+Pior Caso:
+No pior caso, o algoritmo precisa realizar comparações e trocas em todas as iterações. 
+O número máximo de iterações é (n - 1), onde n é o tamanho do array. 
+Em cada iteração, ele encontra o elemento mínimo no subarray não ordenado, que requer n - i - 1 comparações, 
+onde i é o índice da iteração atual. Portanto, o número total de comparações é a soma de (n - 1) + (n - 2) + ... + 1, 
+que é uma série aritmética com a soma igual a (n * (n - 1)) / 2. 
+Além disso, ele realiza trocas em cada iteração, que também são da ordem de (n - 1). 
+Assim, a complexidade de tempo no pior caso é O(n^2) - quadrática.
+
+Melhor Caso:
+No melhor caso, o array já está completamente ordenado. 
+Mesmo assim, o algoritmo realiza comparações para verificar se o elemento atual é o mínimo e, eventualmente, faz trocas. 
+Portanto, mesmo no melhor caso, ele executa n - 1 comparações em cada iteração e realiza trocas. 
+A complexidade de tempo no melhor caso é O(n^2) - quadrática.
+
+Caso Médio:
+O caso médio também é O(n^2), pois o algoritmo realiza um número semelhante de comparações e trocas, 
+independentemente da distribuição dos valores no array. O Selection Sort não é sensível à distribuição dos valores e executa 
+uma quantidade fixa de trabalho em cada iteração.
+*/
+
+
