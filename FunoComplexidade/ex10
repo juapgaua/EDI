@@ -1,0 +1,55 @@
+void MaxMin3(Vetor A, int* pMax, int* pMin)
+{
+ int i, FimDoAnel;
+ if ((n % 2) > 0){
+ A[n] = A[n - 1];
+ FimDoAnel = n;
+ }
+ else FimDoAnel = n - 1;
+ if (A[0] > A[1]){
+ *pMax = A[0];
+ *pMin = A[1];
+ }
+ else{
+ *pMax = A[1];
+ *pMin = A[0];
+ }
+ i = 3;
+ while (i <= FimDoAnel){
+ if (A[i - 1] > A[i]){
+ if (A[i - 1] > *pMax)
+ *pMax = A[i - 1];
+ if (A[i] < *pMin)
+ *pMin = A[i];
+ }
+ else {
+ if (A[i - 1] < *pMin)
+ *pMin = A[i - 1];
+ if (A[i] > *pMax)
+ *pMax = A[i];
+ }
+ i += 2;
+ }
+}
+
+/*
+A função MaxMin3 é uma implementação para encontrar o valor máximo e o valor mínimo em um array A.
+
+Pior Caso:
+O pior caso ocorre quando o array A tem um tamanho ímpar, o que faz com que o código execute a primeira condição if 
+e defina FimDoAnel igual a n. Nesse caso, a função percorrerá todo o array em um loop while, 
+com incrementos de 2 em 2 elementos, para encontrar os valores máximo e mínimo. 
+O número de iterações é n/2. 
+Portanto, a complexidade de tempo no pior caso é O(n) - linear.
+
+Melhor Caso:
+O melhor caso ocorre quando o array A já está ordenado de forma que o maior valor esteja na primeira posição 
+e o menor valor na segunda posição. 
+Nesse caso, a função fará apenas duas comparações para determinar os valores máximo e mínimo, e o loop while não será executado. 
+A complexidade de tempo no melhor caso é O(1) - constante.
+
+Caso Médio:
+O caso médio é mais difícil de determinar sem informações específicas sobre a distribuição dos valores no array. 
+No entanto, em termos gerais, a complexidade de tempo no caso médio provavelmente se aproximará de O(n) 
+devido ao loop while que percorre metade do array.
+*/
