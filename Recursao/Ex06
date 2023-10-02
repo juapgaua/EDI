@@ -1,0 +1,51 @@
+/*
+6) Faça uma função recursiva em linguagem c que você é especialista com comentarios para calcular o mdc de dois inteiros positivos. Sabe-se que:
+mdc(x,y) = y se y<=x e x%y igual a zero
+mdc(x,y) = mdc(y,x) se x<y mdc(x,y) =
+mdc(x, x % y)
+Desenvolvido por Juliana Apggaua Sant'Ana Vidigal
+02/10/2023
+*/
+
+#include <stdio.h>
+
+// Função recursiva para calcular o MDC de dois inteiros positivos
+int mdc(int x, int y) {
+    // Caso base: Se y for igual a zero, o MDC é x
+    if (y == 0) {
+        return x;
+    }
+
+    // Caso contrário, calculamos o MDC de y e x % y (segundo a regra)
+    return mdc(y, x % y);
+}
+
+int main() {
+    int num1, num2;
+
+    printf("Digite dois inteiros positivos: ");
+    scanf("%d %d", &num1, &num2);
+
+    // Verifica se os números são positivos
+    if (num1 <= 0 || num2 <= 0) {
+        printf("Por favor, insira inteiros positivos.\n");
+    } else {
+        // Chama a função mdc para calcular o MDC dos dois números
+        int resultado = mdc(num1, num2);
+        printf("O MDC de %d e %d é %d\n", num1, num2, resultado);
+    }
+
+    return 0;
+}
+
+/*
+Exemplo: Se x é igual a 10 e y é igual a 15, podemos calcular quantas chamadas recursivas
+serão realizadas para encontrar o MDC usando a função mdc que foi definida anteriormente.
+
+mdc(10, 15) - Inicial call
+mdc(15, 10) - De acordo com a regra mdc(x, y) = mdc(y, x)
+mdc(10, 5) - De acordo com a regra mdc(x, y) = mdc(x, x % y)
+mdc(5, 0) - Chegamos ao caso base, onde y é igual a zero.
+
+Portanto, um total de 4 chamadas recursivas são realizadas para calcular o MDC de 10 e 15 usando a função mdc.
+*/
