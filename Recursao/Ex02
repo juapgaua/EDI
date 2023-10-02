@@ -1,0 +1,31 @@
+/*
+2)Dada a função abaixo:
+int x(int n){
+if (n >= 0 && n <= 2)
+return n
+else
+return x(n-1)+x(n-2)+x(n-3);
+}
+
+Quantas chamadas serão executadas para avaliar x(6) ?
+
+x(6) chama x(5), x(4), e x(3) (3 chamadas).
+x(5) chama x(4), x(3), e x(2) (3 chamadas).
+x(4) chama x(3), x(2), e x(1) (3 chamadas).
+x(3) chama x(2), x(1), e x(0) (3 chamadas).
+x(2), x(1), e x(0) são os casos base que não fazem chamadas recursivas.
+
+Agora, podemos contar as chamadas recursivas:
+
+Portanto, até x(3), já temos um total de 3 + 3 + 3 + 3 = 12 chamadas recursivas. 
+Além disso, em cada chamada recursiva, estamos alcançando um dos casos base, que não fazem chamadas recursivas.
+
+Portanto, o número total de chamadas executadas para avaliar x(6) é 12.
+
+
+
+
+
+
+
+*/
