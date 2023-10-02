@@ -1,0 +1,68 @@
+/*8) Faça uma função recursiva para verificar se uma expressão (string) de parênteses é
+bem formada.
+Desenvolvido por Juliana Apgaua Sant'Ana Vidigal
+02/10/2023
+*/
+
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+#include <locale.h>
+
+// Função recursiva para verificar se uma expressão de parênteses está bem formada
+bool verificaExpressao(char *expressao, int indice, int contador) {
+    // Caso base: Se chegarmos ao final da string, verificamos se o contador é zero
+    if (indice == strlen(expressao)) {
+        return contador == 0;
+    }
+
+    // Se encontrarmos um parêntese de abertura, incrementamos o contador
+    if (expressao[indice] == '(') {
+        return verificaExpressao(expressao, indice + 1, contador + 1);
+    }
+
+    // Se encontrarmos um parêntese de fechamento, decrementamos o contador
+    if (expressao[indice] == ')') {
+        // Se o contador for zero ou negativo, a expressão está mal formada
+        if (contador <= 0) {
+            return false;
+        }
+        return verificaExpressao(expressao, indice + 1, contador - 1);
+    }
+
+    // Se encontrarmos qualquer outro caractere, simplesmente continuamos verificando
+    return verificaExpressao(expressao, indice + 1, contador);
+}
+
+int main() {
+    setlocale(LC_ALL,"");
+    char expressao[100];
+
+    printf("Digite uma expressao de parênteses: ");
+    scanf("%s", expressao);
+
+    if (verificaExpressao(expressao, 0, 0)) {
+        printf("A expressao esta bem formada.\n");
+    } else {
+        printf("A expressao nao esta bem formada.\n");
+    }
+
+    return 0;
+}
+
+/*
+Exemplo: Para avaliar se a expressão "(a+b)" está correta, a função recursiva mencionada anteriormente fará 
+apenas duas chamadas recursivas. Aqui está como as chamadas ocorrerão:
+
+A primeira chamada ocorrerá quando a função verificar o parêntese de abertura "(" na expressão. 
+Ela aumentará o contador em 1 e avançará para avaliar o restante da expressão: "a+b)".
+
+A segunda chamada ocorrerá quando a função verificar o parêntese de fechamento ")" na expressão. 
+Ela diminuirá o contador em 1 e avançará para avaliar o restante da expressão, que está vazia neste ponto, 
+pois a expressão foi totalmente processada.
+
+Após essas duas chamadas recursivas, a função chegará ao final da expressão e verificará se o contador é zero. 
+Se for zero, a expressão "(a+b)" será considerada correta. Portanto, apenas duas chamadas recursivas são necessárias 
+para avaliar a expressão "(a+b)".
+*/
+
