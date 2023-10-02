@@ -1,0 +1,33 @@
+void bubblesort(int A[n], int n){
+ int i,j;
+ int aux;
+ for(j = 0; j < n; j++){
+ for(i = 0; i < n - 1; i++){
+ if(A[i] > A[i+1]){
+ aux = A[i];
+ A[i] = A[i+1];
+ A[i+1] = aux;
+ }}}}
+/*
+A função bubblesort implementa o algoritmo de ordenação conhecido como "Bubble Sort" para ordenar um array de inteiros A com n elementos.
+
+Pior Caso:
+No pior caso, o algoritmo precisa realizar trocas em cada passo do loop externo e interno para garantir que o array esteja
+completamente ordenado. Isso resulta em um total de n * (n - 1) / 2 comparações e trocas. 
+Portanto, a complexidade de tempo no pior caso é O(n^2) - quadrática.
+
+Melhor Caso:
+No melhor caso, o array já está ordenado, e o algoritmo precisa percorrer o array para verificar que nenhuma troca é necessária. 
+Nesse caso, o número de comparações é igual a n - 1, e o número de trocas é zero. 
+Portanto, a complexidade de tempo no melhor caso é O(n) - linear.
+
+Caso Médio:
+O caso médio depende da distribuição dos valores no array. No entanto, em geral, o Bubble Sort tende a realizar um número
+quadrático de comparações e trocas, mesmo no caso médio. Portanto, a complexidade de tempo no caso médio é, em geral, O(n^2) - quadrática.
+
+Em resumo, o Bubble Sort tem uma complexidade de tempo no pior caso e no caso médio de O(n^2) 
+e uma complexidade de tempo no melhor caso de O(n^2). 
+É um algoritmo de ordenação simples, mas não eficiente para grandes conjuntos de dados, pois seu desempenho é quadrático. 
+Há algoritmos de ordenação mais eficientes, como o Quick Sort e o Merge Sort, que têm complexidades melhores em média.
+
+*/
