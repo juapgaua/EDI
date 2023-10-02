@@ -1,0 +1,28 @@
+void MaxMin2(int A[n], int* pMax, int* pMin){
+ *pMax = A[0];
+ *pMin = A[0];
+ for (i = 1; i < n; i++){
+ if (A[i] > *pMax)
+ *pMax = A[i];
+ else if (A[i] < *pMin)
+ *pMin = A[i];
+ }
+}
+
+/*
+Pior Caso:
+No pior caso, o algoritmo precisa percorrer todo o array para encontrar o valor máximo e o valor mínimo. 
+Isso ocorre quando o maior valor está na última posição do array e o menor valor está na primeira posição, ou vice-versa. 
+Portanto, o número de comparações é igual a 2n - 2. A complexidade de tempo no pior caso é O(n) - linear, assim como na função MaxMin1.
+
+Melhor Caso:
+No melhor caso, o algoritmo encontra tanto o valor máximo quanto o valor mínimo logo na primeira comparação, 
+quando *pMax e *pMin são inicializados com A[0]. Portanto, o número de comparações é igual a 1. 
+A complexidade de tempo no melhor caso é O(1) - constante, assim como na função MaxMin1.
+
+Caso Médio:
+O caso médio depende da distribuição dos valores no array. Assim como na função MaxMin1, 
+se assumirmos uma distribuição aleatória dos valores no array, podemos esperar que, em média, 
+o algoritmo percorra aproximadamente metade do array para encontrar tanto o valor máximo quanto o valor mínimo. 
+Portanto, a complexidade de tempo no caso médio também é O(n) - linear, similar à função MaxMin1.
+*/
