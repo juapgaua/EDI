@@ -1,0 +1,63 @@
+/*
+5) Faça uma função recursiva soma que, dados dois números inteiros não negativos a e b,
+retorne a + b, usando apenas as operações mais simples de incrementar 1.
+Desenvolvido por Juliana Apgaua Sant'Ana Vidigal
+02/10/2023
+*/
+
+#include <stdio.h>
+
+// Função recursiva para somar dois números inteiros não negativos a e b
+int soma(int a, int b) {
+    // Caso base: Se b for 0, retornamos a
+    if (b == 0) {
+        return a;
+    }
+    // Caso recursivo: Chamamos a função soma com a incrementado em 1 e b decrementado em 1
+    // Isso é equivalente a somar 1 a 'a' b vezes.
+    else {
+        return soma(a + 1, b - 1);
+    }
+}
+
+int main() {
+    int a, b;
+
+    printf("Digite dois números inteiros não negativos a e b: ");
+    scanf("%d %d", &a, &b);
+
+    if (a >= 0 && b >= 0) {
+        int resultado = soma(a, b);
+        printf("A soma de %d e %d é %d\n", a, b, resultado);
+    } else {
+        printf("Por favor, digite números inteiros não negativos.\n");
+    }
+
+    return 0;
+}
+
+/*
+Se a igual a 10 e b igual a 15, ocorrerão 15 chamadas recursivas antes que a função atinja o caso base. 
+Isso acontece porque estamos decrementando b em 1 a cada chamada recursiva, 
+e o caso base é atingido quando b se torna igual a 0.
+
+Portanto, as chamadas recursivas ocorreriam da seguinte forma:
+
+soma(10, 15)
+soma(11, 14)
+soma(12, 13)
+soma(13, 12)
+soma(14, 11)
+soma(15, 10)
+soma(16, 9)
+soma(17, 8)
+soma(18, 7)
+soma(19, 6)
+soma(20, 5)
+soma(21, 4)
+soma(22, 3)
+soma(23, 2)
+soma(24, 1)
+soma(25, 0) (Caso base é atingido aqui, e a recursão termina)
+Portanto, um total de 15 chamadas recursivas ocorrerá antes de chegarmos ao resultado final da soma de 10 e 15.
+*/
