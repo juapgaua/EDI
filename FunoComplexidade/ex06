@@ -1,0 +1,28 @@
+void FazAlgo2(int n){
+ int i,j,k,x;
+ x = 0;
+ for(i = 1 ; i <= n ; i ++)
+ for(j = i + 1 ; j <= n - 1 ; j++)
+ for(k = 1 ; k <= j ; k++)
+ x = x + 1;
+}
+
+/*
+A função possui três loops aninhados e realiza uma série de iterações.
+
+Pior Caso, Melhor Caso e Caso Médio:
+  Em todos os casos:
+O primeiro loop vai de 1 a n, o que significa que ele executa n vezes.
+O segundo loop vai de i + 1 a n - 1, onde i varia de 1 a n. 
+  No pior caso, quando i é igual a n, o segundo loop executa n - 1 - (n + 1) vezes, ou seja, -1 vezes. 
+  Nesse caso, o segundo loop não é executado.
+O terceiro loop vai de 1 a j, onde j varia de i + 1 a n - 1. 
+  No pior caso, quando i é igual a n (e, portanto, o segundo loop não é executado), o terceiro loop também não é executado.
+
+Portanto a função não realiza nenhum loop aninhado, e o número total de iterações é 0.
+
+A complexidade de tempo é O(1), ou seja, constante. 
+Isso ocorre porque, em todos os casos, a função não executa nenhum loop aninhado, independentemente do valor de n. 
+Portanto, a complexidade de tempo é constante em relação ao tamanho da entrada n.
+
+*/
