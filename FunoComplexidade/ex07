@@ -1,0 +1,44 @@
+void bubblesort2(int A[n], int n){
+ int i,j,troca;
+ int aux;
+ do {
+ troca = 0;
+ for (i = 0 ; i < n-1 ; i++){
+ if (A[i] > A[i+1]){
+ aux = A[i];
+ A[i] = A[i+1];
+ A[i+1] = aux;
+ troca = 1;
+ }
+ }
+ } while (troca);
+}
+
+/*
+A função bubblesort2 implementa o algoritmo de ordenação Bubble Sort otimizado, 
+que utiliza uma variável troca para verificar se ocorreu alguma troca de elementos durante uma passagem pelo array. 
+Se nenhuma troca ocorrer durante uma passagem, o algoritmo considera o array como ordenado e sai do loop. 
+Isso ajuda a reduzir o número de comparações em cenários em que o array já está parcialmente ou totalmente ordenado.
+
+Pior Caso:
+No pior caso, o array está completamente desordenado, e o algoritmo precisa realizar trocas em todas as passagens pelo array. 
+O número máximo de passagens que podem ocorrer é n - 1, e em cada passagem, o algoritmo faz n - i - 1 comparações, 
+onde i é o número da passagem atual. Portanto, o número total de comparações é a soma de (n - 1) + (n - 2) + ... + 1, 
+que é uma série aritmética com a soma igual a (n * (n - 1)) / 2. 
+Assim, a complexidade de tempo no pior caso é O(n^2) - quadrática.
+
+Melhor Caso:
+Melhor Caso:
+No melhor caso, o array já está completamente ordenado. Nesse cenário, o Bubble Sort otimizado não precisa realizar nenhuma troca
+durante as passagens, pois os elementos já estão na ordem correta. Portanto, o número de trocas é zero, e o algoritmo sai 
+imediatamente após a primeira passagem pelo array, pois a variável troca permanece como zero. 
+Isso resulta em um tempo de execução linear, e a complexidade de tempo no melhor caso é O(n) - linear.
+
+Caso Médio:
+O caso médio depende da distribuição dos valores no array. 
+Isso ocorre porque, mesmo com a otimização que reduz o número de trocas em comparação com o Bubble Sort tradicional, 
+o Bubble Sort otimizado ainda realiza muitas comparações entre elementos, especialmente quando o array possui uma 
+distribuição aleatória ou quase aleatória dos valores. Portanto, em termos práticos, a complexidade de tempo no caso médio 
+para o Bubble Sort otimizado tende a ser O(n^2) na maioria dos casos.
+
+*/
