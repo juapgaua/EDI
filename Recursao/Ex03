@@ -1,0 +1,59 @@
+/*
+3) Implemente a pesquisa binária de forma recursiva. Considere um vetor de inteiros
+como conjunto de busca.
+Desenvolvido por Juliana Apgaua Sant'Ana Vidigal
+02/10/2023
+*/
+
+#include <stdio.h>
+
+// Função de pesquisa binária recursiva
+int pesquisaBinariaRecursiva(int vetor[], int inicio, int fim, int alvo) {
+    // Verifica se o início é maior que o fim, o que indica que o alvo não está no vetor
+    if (inicio > fim) {
+        return -1; // Retorna -1 para indicar que o elemento não foi encontrado
+    }
+
+    // Calcula o ponto médio do vetor
+    int meio = (inicio + fim) / 2;
+
+    // Se o elemento no ponto médio for igual ao alvo, retornamos o índice do meio
+    if (vetor[meio] == alvo) {
+        return meio;
+    }
+    // Se o elemento no ponto médio for maior que o alvo, pesquisamos na metade esquerda
+    else if (vetor[meio] > alvo) {
+        return pesquisaBinariaRecursiva(vetor, inicio, meio - 1, alvo);
+    }
+    // Se o elemento no ponto médio for menor que o alvo, pesquisamos na metade direita
+    else {
+        return pesquisaBinariaRecursiva(vetor, meio + 1, fim, alvo);
+    }
+}
+
+int main() {
+    int vetor[] = {2, 4, 6, 8, 10, 12, 14, 16};
+    int tamanho = sizeof(vetor) / sizeof(vetor[0]);
+    int alvo = 10;
+
+    // Chama a função de pesquisa binária recursiva
+    int resultado = pesquisaBinariaRecursiva(vetor, 0, tamanho - 1, alvo);
+
+    if (resultado != -1) {
+        printf("O elemento %d foi encontrado no índice %d.\n", alvo, resultado);
+    } else {
+        printf("O elemento %d não foi encontrado no vetor.\n", alvo);
+    }
+
+    return 0;
+}
+
+/*
+O número de chamadas de função realizadas na função de pesquisa binária recursiva depende do tamanho do vetor
+ e da posição do elemento que você está procurando. No pior caso, a pesquisa binária pode fazer um número máximo
+ de chamadas recursivas igual ao logaritmo na base 2 do tamanho do vetor, arredondado para cima.
+
+Neste exemplo, o vetor possui 8 elementos, então o número máximo de chamadas recursivas no pior caso seria log2(8) = 3,
+ porque a pesquisa binária divide o vetor pela metade a cada chamada. 
+ Portanto, no pior caso, a função pesquisaBinariaRecursiva fará no máximo 3 chamadas recursivas.
+*/
