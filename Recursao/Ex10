@@ -1,0 +1,27 @@
+/*
+Desenvolvido por Juliana Apgaua Sant'Ana Vidigal
+03.10.2023
+
+10) Localize o(s) erro(s) na seguinte função recursiva e explique como corrigi-lo(s). Essa
+função deve calcular a soma dos valores de 0 a n.
+
+int soma(int n){
+  if (n == 0)
+    return 0;
+  else
+    return n +soma(n);
+}
+
+//Funçao chama a si mesma com o mesmo valor de n repetidamente gerando um LOOP INFINITO
+
+//Para corrigir a função deve diminuir o valor de n a cada chamada recursiva até que n atinja a condição 
+de parada e também somar os valores de forma acumulativa à medida que a recursçao retorna:
+
+int soma(int n){
+  if(n==0)
+    return 0;
+  else
+    return n+soma(n-1);
+  }
+*/
+
