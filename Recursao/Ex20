@@ -1,0 +1,44 @@
+/*
+20) Faça uma função recursiva que receba um número inteiro positivo N e retorne o
+super-fatorial desse número. O superfatorial de um número N é definida pelo produto
+dosprimeiros fatoriais de N. Assim, o superfatorial de 4 é
+sf (4) = 1! 2! 3! 4! = 288
+Desenvolvido por Juliana Apgaua Sant'Ana Vidigal
+*/
+
+#include <setlocale.h>
+#include <stdio.h>
+
+// Função para calcular o fatorial de um número
+unsigned long long fatorial(int n) {
+    if (n == 0 || n == 1) {
+        return 1;
+    } else {
+        return n * fatorial(n - 1);
+    }
+}
+
+// Função para calcular o superfatorial
+unsigned long long superfatorial(int n) {
+    if (n == 1) {
+        return fatorial(1);
+    } else {
+        return fatorial(n) * superfatorial(n - 1);
+    }
+}
+
+int main() {
+    setlocale(LC_ALL,"");
+    int n;
+    printf("Digite um número inteiro positivo N: ");
+    scanf("%d", &n);
+
+    if (n < 1) {
+        printf("Por favor, digite um número inteiro positivo.\n");
+    } else {
+        unsigned long long resultado = superfatorial(n);
+        printf("O superfatorial de %d é %llu\n", n, resultado);
+    }
+
+    return 0;
+}
