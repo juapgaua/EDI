@@ -1,0 +1,44 @@
+/*
+16) Escreva uma função recursiva que determine quantas vezes um dígito K ocorre em um
+número natural N. Por exemplo, o dígito 2 ocorre 3 vezes em 762021192.
+Desenvolvido por Juliana Apgaua Sant'Ana Vidigal
+03/10/2023
+*/
+
+#include <stdio.h>
+
+int contarDigitos(int n, int k) {
+    // Caso base: quando n se torna zero, não há mais dígitos para verificar.
+    if (n == 0) {
+        return 0;
+    }
+
+    // Recursivamente chamamos a função para o restante dos dígitos à direita de n.
+    int ocorrenciasRestantes = contarDigitos(n / 10, k);
+
+    // Verificamos o dígito atual de n.
+    int digitoAtual = n % 10;
+
+    // Se o dígito atual for igual a k, incrementamos o contador de ocorrências.
+    if (digitoAtual == k) {
+        return ocorrenciasRestantes + 1;
+    } else {
+        return ocorrenciasRestantes;
+    }
+}
+
+int main() {
+    int n, k;
+
+    printf("Digite um número natural: ");
+    scanf("%d", &n);
+
+    printf("Digite o dígito a ser contado: ");
+    scanf("%d", &k);
+
+    int ocorrencias = contarDigitos(n, k);
+
+    printf("O dígito %d ocorre %d vezes em %d.\n", k, ocorrencias, n);
+
+    return 0;
+}
