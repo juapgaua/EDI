@@ -1,0 +1,35 @@
+/*
+18) Faça uma função recursiva que calcule o valor da série S descrita a seguir para um valor n > 0 
+a ser fornecido como parâmetro para a mesma. 
+S = 2 + 5/2 + 10/3 + ... + (1 + n^2)/n
+Desenvolvido por Juliana Apgaua Sant'Ana Vidigal
+03/10/2023
+*/
+
+#include <locale.h>
+#include <stdio.h>
+
+double calcularSerie(int n) {
+    if (n == 1) {
+        return 2.0;
+    } else {
+        double termo = (1.0 + n * n) / n;
+        return termo + calcularSerie(n - 1);
+    }
+}
+
+int main() {
+    setlocale(LC_ALL, "");
+    int n;
+    printf("Digite um valor para n: ");
+    scanf("%d", &n);
+
+    if (n <= 0) {
+        printf("O valor de n deve ser maior que 0.\n");
+    } else {
+        double resultado = calcularSerie(n);
+        printf("O valor da série S para n = %d é %.2f\n", n, resultado);
+    }
+
+    return 0;
+}
