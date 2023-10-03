@@ -1,0 +1,37 @@
+/*
+Desenvolvido por Juliana Apgaua Sant'Ana Vidigal
+03/10/2023
+
+12) Considere a função abaixo:
+  int x(int a){
+    if ( a <= 0 )
+      return 0;
+    else
+      return a + x(a-1);
+    }
+a) O que essa função faz?
+    Esta função calcula a soma de todos os números inteiros de 1 até a.
+Incicia em a e vai decrementando até chegar a zero. Exemplo se a=5:
+  x(5) -> x(4) -> 5 + x(4)
+  x(4) -> x(3) -> 4 + x(3)
+  x(3) -> x(2) -> 3 + x(2)
+  x(2) -> x(1) -> 2 + x(1)
+  x(1) -> x(0) -> 1 + x(0)
+  x(0) - CONDIÇÃO DE PARADA RETURN 0
+
+  x(5) = 5+(4+(3+(2+(1+0))))
+  x(5) = 15
+
+b) Escreva uma função não-recursiva que resolve o mesmo problema.
+    int soma(int a){
+      int resultado = 0;
+          for(int i; i<=a; i++){
+              resultado +=1;
+          }
+      return resultado; 
+    }
+
+c) Qual implementação é mais eficiente? Justifique.
+  Neste caso, para realizar a soma de números inteiros consecutivos a implementação não recursiva é mais eficiente pois utiliza
+um único loop enquanto a funçao recursiva realiza várias chamadas de função o que demanda mais tempo e memória.
+*/
