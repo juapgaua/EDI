@@ -1,0 +1,72 @@
+/*
+9) Implemente o método de ordenação as seleção direta de forma recursiva.
+Desenvolvido por Juliana Apgaua Sant'Ana Vidigal
+03.10.2023
+*/
+
+#include <stdio.h>
+#include <locale.h>
+
+// Função para encontrar o índice do menor elemento no vetor
+int encontrarMenor(int vetor[], int inicio, int tamanho) {
+    int menor = inicio;
+    for (int i = inicio + 1; i < tamanho; i++) {
+        if (vetor[i] < vetor[menor]) {
+            menor = i;
+        }
+    }
+    return menor;
+}
+
+// Função recursiva para ordenar um vetor usando a seleção direta
+void selecaoDiretaRecursiva(int vetor[], int inicio, int tamanho) {
+    if (inicio >= tamanho - 1) {
+        return;  // Caso base: vetor ordenado
+    }
+
+    // Encontre o índice do menor elemento no vetor
+    int menor = encontrarMenor(vetor, inicio, tamanho);
+
+    // Troque o menor elemento com o elemento na posição 'inicio'
+    if (menor != inicio) {
+        int aux = vetor[inicio];
+        vetor[inicio] = vetor[menor];
+        vetor[menor] = aux;
+    }
+
+    // Chame a função recursivamente para o restante do vetor
+    selecaoDiretaRecursiva(vetor, inicio + 1, tamanho);
+}
+
+int main() {
+    setlocalde(LC_ALL, "");
+    int vetor[] = {64, 25, 12, 22, 11};
+    int tamanho = sizeof(vetor) / sizeof(vetor[0]);
+
+    printf("Vetor antes da ordenação:\n");
+    for (int i = 0; i < tamanho; i++) {
+        printf("%d ", vetor[i]);
+    }
+
+    // Chame a função de ordenação
+    selecaoDiretaRecursiva(vetor, 0, tamanho);
+
+    printf("\nVetor após a ordenação:\n");
+    for (int i = 0; i < tamanho; i++) {
+        printf("%d ", vetor[i]);
+    }
+
+    return 0;
+}
+
+/*
+Para determinar o número de chamadas recursivas necessárias para ordenar um vetor de tamanho n
+usando a implementação recursiva da seleção direta, podemos calcular o número de chamadas recursivas
+diretamente a partir do código. Cada chamada recursiva representa uma iteração do algoritmo.
+
+Neste caso, o algoritmo recursivo realiza uma chamada recursiva para cada elemento do vetor,
+exceto o último, já que o caso base é quando inicio >= tamanho - 1.
+Portanto, o número total de chamadas recursivas será n - 1.
+
+Nesse exemplo, O vetor tem tamanho 5, e o número de chamadas recursivas será 5 - 1 = 4.
+*/
