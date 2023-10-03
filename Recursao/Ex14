@@ -1,0 +1,32 @@
+/*
+14) Implemente uma função recursiva Dec2Bin que dado um número decimal imprima a sua
+representação binária corretamente.
+Desenvolvido por Juliana Apgaua Sant'Ana Vidigal
+03.10.2023
+*/
+
+#include <stdio.h>
+
+void Dec2Bin(int n) {
+    if (n > 0) {
+        Dec2Bin(n / 2); // Chamada recursiva com a parte inteira da divisão por 2
+        printf("%d", n % 2); // Imprime o resto da divisão por 2 (0 ou 1)
+    }
+}
+
+int main() {
+    int decimal;
+
+    printf("Digite um número decimal: ");
+    scanf("%d", &decimal);
+
+    if (decimal < 0) {
+        printf("Por favor, digite um número decimal não negativo.\n");
+    } else {
+        printf("A representação binária de %d é: ", decimal);
+        Dec2Bin(decimal);
+        printf("\n");
+    }
+
+    return 0;
+}
