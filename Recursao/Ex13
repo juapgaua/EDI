@@ -1,0 +1,41 @@
+/*
+13) Implemente uma função, recursiva, para calcular a soma dos elementos de uma matriz
+4x5 de inteiros.
+Desenvolvido por Juliana Apgaua Sant'Ana Vidigal
+03.10.2023
+*/
+#include <stdio.h>
+
+// Função recursiva para calcular a soma dos elementos da matriz
+int somaMatriz(int matriz[4][5], int linha, int coluna) {
+    // Caso base: Se chegarmos à última coluna da última linha, retornamos o valor nessa posição.
+    if (linha == 3 && coluna == 4) {
+        return matriz[linha][coluna];
+    }
+    // Caso recursivo: Se não estivermos na última posição, somamos o valor atual com a soma dos elementos restantes.
+    else {
+        int somaAtual = matriz[linha][coluna];
+        // Se estivermos na última coluna, avançamos para a próxima linha.
+        if (coluna == 4) {
+            return somaAtual + somaMatriz(matriz, linha + 1, 0);
+        }
+        // Caso contrário, avançamos para a próxima coluna na mesma linha.
+        else {
+            return somaAtual + somaMatriz(matriz, linha, coluna + 1);
+        }
+    }
+}
+
+int main() {
+    int matriz[4][5] = {
+        {1, 2, 3, 4, 5},
+        {6, 7, 8, 9, 10},
+        {11, 12, 13, 14, 15},
+        {16, 17, 18, 19, 20}
+    };
+
+    int resultado = somaMatriz(matriz, 0, 0);
+    printf("A soma dos elementos da matriz é: %d\n", resultado);
+
+    return 0;
+}
