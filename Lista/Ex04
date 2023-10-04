@@ -1,0 +1,109 @@
+/*
+4) Escreva uma função em C para trocar os elementos m e n de uma lista simplesmente encadeada
+(m e n podem ser chaves ou mesmo ponteiros para os elementos – a escolha é sua).
+Desenvolvido por Juliana Apgaua Sant'Ana Vidigal
+04/10/2023
+*/
+
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Nodo {
+    int dado;
+    struct Nodo* proximo;
+} TNodo;
+
+void trocarNodo(TNodo** inicio, TNodo* m, TNodo* n) {
+    if (*inicio == NULL || m == NULL || n == NULL) {
+        return;
+    }
+
+    // Encontrar o nó anterior a 'm' e 'n'
+    TNodo* antM = NULL;
+    TNodo* antN = NULL;
+    TNodo* atual = *inicio;
+
+    while (atual != NULL && (antM == NULL || antN == NULL)) {
+        if (atual->proximo == m) {
+            antM = atual;
+        }
+        if (atual->proximo == n) {
+            antN = atual;
+        }
+        atual = atual->proximo;
+    }
+
+    // Verificar se 'm' e 'n' foram encontrados na lista
+    if (antM == NULL || antN == NULL) {
+        printf("Elementos 'm' ou 'n' não encontrados na lista.\n");
+        return;
+    }
+
+    // Atualizar os ponteiros para trocar os elementos
+    if (antM != NULL) {
+        antM->proximo = n;
+    } else {
+        *inicio = n;
+    }
+
+    if (antN != NULL) {
+        antN->proximo = m;
+    } else {
+        *inicio = m;
+    }
+
+    TNodo* aux = m->proximo;
+    m->proximo = n->proximo;
+    n->proximo = aux;
+}
+
+// Função para imprimir a lista
+void imprimirLista(TNodo* inicio) {
+    TNodo* atual = inicio;
+    while (atual != NULL) {
+        printf("%d ", atual->dado);
+        atual = atual->proximo;
+    }
+    printf("\n");
+}
+
+// Função para adicionar um novo nó ao final da lista
+void adicionar(TNodo** inicio, int dado) {
+    TNodo* novoNodo = (TNodo*)malloc(sizeof(TNodo));
+    novoNodo->dado = dado;
+    novoNodo->proximo = NULL;
+
+    if (*inicio == NULL) {
+        *inicio = novoNodo;
+    } else {
+        TNodo* atual = *inicio;
+        while (atual->proximo != NULL) {
+            atual = atual->proximo;
+        }
+        atual->proximo = novoNodo;
+    }
+}
+
+int main() {
+    TNodo* inicio = NULL;
+
+    // Preencher a lista com alguns elementos
+    adicionar(&inicio, 1);
+    adicionar(&inicio, 2);
+    adicionar(&inicio, 3);
+    adicionar(&inicio, 4);
+    adicionar(&inicio, 5);
+
+    printf("Lista original: ");
+    imprimirLista(inicio);
+
+    // Trocar os elementos 2 e 4
+    TNodo* m = inicio->proximo;
+    TNodo* n = inicio->proximo->proximo->proximo;
+    trocarNodo(&inicio, m, n);
+
+    printf("Lista após a troca: ");
+    imprimirLista(inicio);
+
+    return 0;
+}
