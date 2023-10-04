@@ -1,0 +1,144 @@
+//TADJosephus.h
+
+/*
+2) Implementar o problema de Josephus utilizando o TAD lista com duplamnete encadeada
+circular. Defina a estrutura de dados para resolver esse problema.
+Problema: um grupo de soldados está cercado pelo inimigo e existe apenas um cavalo para a
+fuga. Decidiu-se que o soldado que será capturado, ou seja, conseguirá fugir, será definido na
+sorte, independente da patente. O processo de escolha será por eliminação, sendo que o último
+soldado a ser selecionado usuaria o cavalo para fugir. O processo de eliminação consiste em:
+organizar os soldados em volta da fogueira; escolher um soldado para iniciar a contagem e
+sortear um único número. Ao final da contagem, o soldado escolhido é eliminado e o processo é
+reiniciado a partir do próximo soldado, até só restar o soldado ganhador. A cada rodada, deve
+ser impressoos nomes dos soldados elimininados, na ordema de eliminação e os nomes dos
+soldados ainda particicipantes do jogo.
+Desenvolvido por Juliana Apgaua Sant'Ana Vidigal
+Data: 04/10/2023
+*/
+#ifndef TADJOSEPHUS_H_INCLUDED
+#define TADJOSEPHUS_H_INCLUDED
+// Estrutura para representar um soldado
+typedef struct Soldado {
+    char nome[20];
+    struct Soldado* proximo;
+    struct Soldado* anterior;
+}TSoldado;
+
+// Função para criar um novo soldado
+TSoldado* criarSoldado(char* nome);
+
+// Função para adicionar um soldado à lista
+void adicionarSoldado(TSoldado** cabeca, TSoldado* novoSoldado);
+
+// Função para eliminar um soldado da lista
+void eliminarSoldado(TSoldado** cabeca, TSoldado* atual);
+
+// Função principal para resolver o problema de Josephus
+void josephus(int numSoldados);
+
+#endif // TADJOSEPHUS_H_INCLUDED
+
+//TADJosephus.c
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include "TADJosephus.h"
+
+// Função para criar um novo soldado
+TSoldado* criarSoldado(char* nome) {
+   TSoldado* novoSoldado = (TSoldado*)malloc(sizeof(TSoldado));
+    strcpy(novoSoldado->nome, nome);
+    novoSoldado->proximo = NULL;
+    novoSoldado->anterior = NULL;
+    return novoSoldado;
+}
+
+// Função para adicionar um soldado à lista
+void adicionarSoldado(TSoldado** cabeca, TSoldado* novoSoldado) {
+    if (*cabeca == NULL) {
+        *cabeca = novoSoldado;
+        novoSoldado->proximo = novoSoldado;
+        novoSoldado->anterior = novoSoldado;
+    } else {
+        TSoldado* ultimo = (*cabeca)->anterior;
+        novoSoldado->proximo = *cabeca;
+        novoSoldado->anterior = ultimo;
+        ultimo->proximo = novoSoldado;
+        (*cabeca)->anterior = novoSoldado;
+    }
+}
+
+// Função para eliminar um soldado da lista
+void eliminarSoldado(TSoldado** cabeca, TSoldado* atual) {
+    if (*cabeca == NULL) {
+        return;
+    }
+   TSoldado* anterior = atual->anterior;
+   TSoldado* proximo = atual->proximo;
+
+    if (anterior == atual) {
+        // Se houver apenas um soldado restante, ele é o vencedor
+        printf("Soldado vencedor: %s\n", atual->nome);
+        free(atual);
+        *cabeca = NULL;
+    } else {
+        // Imprime o nome do soldado eliminado
+        printf("Soldado eliminado: %s\n", atual->nome);
+
+        // Caso contrário, eliminamos o soldado atual e atualizamos a cabeça da lista
+        anterior->proximo = proximo;
+        proximo->anterior = anterior;
+        if (*cabeca == atual) {
+            *cabeca = proximo;
+        }
+        free(atual);
+    }
+
+    // Imprime os nomes dos soldados ainda participantes do jogo
+   TSoldado* soldadoAtual = *cabeca;
+    printf("Soldados ainda participantes: ");
+    do {
+        printf("%s ", soldadoAtual->nome);
+        soldadoAtual = soldadoAtual->proximo;
+    } while (soldadoAtual != *cabeca);
+    printf("\n");
+}
+
+// Função principal para resolver o problema de Josephus
+void josephus(int numSoldados) {
+    TSoldado* cabeca = NULL;
+    char nomes[][20] = {"Joao", "Jose", "Joaquim", "Antonio", "Pedro"};
+
+    // Criar a lista de soldados
+    for (int i = 0; i < numSoldados; i++) {
+        TSoldado* novoSoldado = criarSoldado(nomes[i]);
+        adicionarSoldado(&cabeca, novoSoldado);
+    }
+
+    TSoldado* atual = cabeca;
+    srand(time(NULL));
+
+    // Loop até que reste apenas um soldado
+    while (cabeca != NULL) {
+        int count = rand() % numSoldados; // Número aleatório de eliminação
+        for (int i = 0; i < count; i++) {
+            atual = atual->proximo;
+        }
+        eliminarSoldado(&cabeca, atual);
+        numSoldados--;
+        atual = atual->proximo; // Próximo soldado
+    }
+}
+
+//main.c
+
+#include <stdio.h>
+#include "TADJosephus.h"
+
+int main() {
+    int numSoldados = 5; // Número de soldados
+    josephus(numSoldados);
+    return 0;
+}
+
