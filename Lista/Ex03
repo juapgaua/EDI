@@ -1,0 +1,182 @@
+//TADListaDuploCircular.h
+/*
+3) Implemente as operações do TAD lista usando arrranjo e encadeamento duplo circular.
+Desenvolvido por Juliana Apgaua Sant'Ana Vidigal
+04/10/2023
+*/
+
+#ifndef TADLISTADUPLOCIRCULAR_H_INCLUDED
+#define TADLISTADUPLOCIRCULAR_H_INCLUDED
+
+typedef int TElemento;
+
+// Estrutura de um nó da lista
+typedef struct Nodo{
+    TElemento info;
+    struct Nodo *anterior;
+    struct Nodo *proximo;
+} TNodo;
+
+// Estrutura da lista
+typedef struct{
+    TNodo *inicio;
+    int tamanho;
+} TLista;
+
+// Inicializa uma lista vazia
+void inicializarLista(TLista *lista);
+
+// Insere um elemento no final da lista
+void inserirElemento(TLista *lista, TElemento elemento);
+
+// Remove um elemento da lista
+void removerElemento(TLista *lista, TElemento elemento);
+
+// Busca um elemento na lista e retorna o ponteiro para o primeiro nó encontrado
+TNodo *buscarElemento(TLista *lista, TElemento elemento);
+
+// Exibe os elementos da lista
+void mostrarLista(TLista *lista);
+
+// Libera a memória alocada para a lista
+void liberarLista(TLista *lista);
+
+#endif
+
+//TADListaDuploCircular.c
+
+#include <stdio.h>
+#include <stdlib.h>
+#include "TADListaDuploCircular.h"
+
+// Inicializa uma lista vazia
+void inicializarLista(TLista *lista){
+    lista->inicio = NULL;
+    lista->tamanho = 0;
+}
+
+// Insere um elemento no final da lista
+void inserirElemento(TLista *lista, TElemento elemento){
+    TNodo *novoNodo = (TNodo *)malloc(sizeof(TNodo));
+    novoNodo->info = elemento;
+
+    if (lista->inicio == NULL){
+        novoNodo->proximo = novoNodo->anterior = novoNodo;
+        lista->inicio = novoNodo;
+    }
+    else{
+        novoNodo->proximo = lista->inicio;
+        novoNodo->anterior = lista->inicio->anterior;
+        lista->inicio->anterior->proximo = novoNodo;
+        lista->inicio->anterior = novoNodo;
+    }
+
+    lista->tamanho++;
+}
+
+// Remove um elemento da lista
+void removerElemento(TLista *lista, TElemento elemento){
+    if (lista->inicio == NULL)
+        return; // Lista vazia
+
+    TNodo *atual = lista->inicio;
+    TNodo *anterior = NULL;
+
+    do{
+        if (atual->info == elemento){
+            if (atual == lista->inicio)
+                lista->inicio = atual->proximo;
+            atual->anterior->proximo = atual->proximo;
+            atual->proximo->anterior = atual->anterior;
+            free(atual);
+            lista->tamanho--;
+            return; // Elemento encontrado e removido
+        }
+
+        anterior = atual;
+        atual = atual->proximo;
+    } while (atual != lista->inicio);
+
+    // Elemento não encontrado
+}
+
+// Busca um elemento na lista e retorna o ponteiro para o primeiro nó encontrado
+TNodo *buscarElemento(TLista *lista, TElemento elemento){
+    if (lista->inicio == NULL)
+        return NULL; // Lista vazia
+
+    TNodo *atual = lista->inicio;
+
+    do{
+        if (atual->info == elemento)
+            return atual;
+
+        atual = atual->proximo;
+    } while (atual != lista->inicio);
+
+    return NULL; // Elemento não encontrado
+}
+
+// Exibe os elementos da lista
+void mostrarLista(TLista *lista){
+    if (lista->inicio == NULL){
+        printf("Lista vazia.\n");
+        return;
+    }
+
+    TNodo *atual = lista->inicio;
+
+    do{
+        printf("%d ", atual->info);
+        atual = atual->proximo;
+    } while (atual != lista->inicio);
+
+    printf("\n");
+}
+
+// Libera a memória alocada para a lista
+void liberarLista(TLista *lista){
+    if (lista->inicio == NULL)
+        return;
+
+    TNodo *atual = lista->inicio;
+    TNodo *proximo;
+
+    do{
+        proximo = atual->proximo;
+        free(atual);
+        atual = proximo;
+    } while (atual != lista->inicio);
+
+    lista->inicio = NULL;
+    lista->tamanho = 0;
+}
+//main.c
+#include <stdio.h>
+#include <stdlib.h>
+#include "TADListaDuploCircular.h"
+
+int main(){
+    TLista minhaLista;
+    inicializarLista(&minhaLista);
+
+    inserirElemento(&minhaLista, 5);
+    inserirElemento(&minhaLista, 10);
+    inserirElemento(&minhaLista, 3);
+
+    mostrarLista(&minhaLista);
+
+    removerElemento(&minhaLista, 10);
+
+    TNodo *buscar = buscarElemento(&minhaLista, 3);
+    if (buscar != NULL)
+        printf("Elemento 3 encontrado na lista.\n");
+    else
+        printf("Elemento 3 nao encontrado na lista.\n");
+
+    mostrarLista(&minhaLista);
+
+    liberarLista(&minhaLista);
+
+    return 0;
+}
