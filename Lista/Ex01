@@ -1,0 +1,385 @@
+//TADLista.h
+
+/*
+1) Dadas as declarações
+typedef int TElemento;
+typedef struct Nodo
+{
+Telemento info;
+struct Nodo *next;
+}TNodo;
+typedef struct
+{
+TNodo *inicio, *fim;
+int tamanho;
+}TLista;
+typedef TLista *lista;
+
+Os campos inicio e fim do tipo TLista apontam, respectivamente, para o primeiro e último
+nodo da lista. O campo next do último nodo da lista aponta para NULL.
+resolva as questões abaixo:
+a) Implemente uma função para inverter a ordem dos elementos de uma lista linear realizando
+apenas a movimentação dos apontadores.
+b) Implemente uma função para verificar se uma lista está ordenada.
+c) Implemente uma função para inserir um elemento em uma lista em uma dada posição.
+d) Implemente uma função para excluir um elemento de uma lista em uma dada posição.
+e) Implemente uma função para verificar a existência de um elemento com uma
+determinada chave em uma lista ordenada. Retornar um ponteiro para tal nodo ou
+NULL.
+f) Implemente a função lista* intercala(lista l1, lista l2) que retorne uma lista a partir das listas
+ordenadas l1 e l2. A lista retornada deve ficar ordenada.
+g) implemente uma função que remova todos os nodos que possuam o campo info igual a um
+determinado valor.
+h) Escreva uma função que, dada uma lista com um número qualquer de elementos,
+encontre o menor elemento da lista e o mova para o começo da lista. Não é permitido
+trocar apenas os campos ou usar uma lista auxiliar! Você deverá fazer a manipulação dos
+apontadores para trocar os nodos de posição).
+Desenvolvido por Juliana Apgaua Sant'Ana Vidigal
+04/10/2023
+*/
+#ifndef TADLISTA_H_INCLUDED
+#define TADLISTA_H_INCLUDED
+
+typedef int TElemento;
+
+typedef struct Nodo{
+    TElemento info;
+    struct Nodo *next;
+} TNodo;
+
+typedef struct{
+    TNodo *inicio, *fim;
+    int tamanho;
+} TLista;
+
+typedef TLista *lista;
+
+void inverterLista(lista l);
+int estaOrdenada(lista l);
+void inserirElemento(lista l, int posicao, TElemento elemento);
+void excluirElemento(lista l, int posicao);
+TNodo *buscarElemento(lista l, TElemento chave);
+lista intercalar(lista l1, lista l2);
+void removerElemento(lista l, TElemento valor);
+void moverMenorParaInicio(lista l);
+
+
+#endif // TADLISTA_H_INCLUDED
+
+//TADLista.c
+
+#include <stdio.h>
+#include <stdlib.h>
+#include "TADLista.h"
+
+// Função para inverter a ordem dos elementos de uma lista
+void inverterLista(lista l){
+    TNodo *atual = l->inicio;
+    TNodo *anterior = NULL;
+    TNodo *proximo = NULL;
+
+    while (atual != NULL){
+        proximo = atual->next;
+        atual->next = anterior;
+        anterior = atual;
+        atual = proximo;
+    }
+    TNodo *aux = l->inicio;
+    l->inicio = l->fim;
+    l->fim = aux;
+}
+
+// Função para verificar se uma lista está ordenada
+int estaOrdenada(lista l){
+    TNodo *atual = l->inicio;
+
+    while (atual != NULL && atual->next != NULL){
+        if (atual->info > atual->next->info)
+            return 0; // A lista não está ordenada
+        atual = atual->next;
+    }
+    return 1; // A lista está ordenada
+}
+
+// Função para inserir um elemento em uma lista em uma dada posição
+void inserirElemento(lista l, int posicao, TElemento elemento){
+    if (posicao < 0 || posicao > l->tamanho){
+        printf("Posição inválida!\n");
+        return;
+    }
+
+    TNodo *novoNodo = (TNodo *)malloc(sizeof(TNodo));
+    novoNodo->info = elemento;
+
+    if (posicao == 0){
+        novoNodo->next = l->inicio;
+        l->inicio = novoNodo;
+        if (l->tamanho == 0)
+            l->fim = novoNodo;
+    }
+    else
+        if (posicao == l->tamanho){
+        novoNodo->next = NULL;
+        l->fim->next = novoNodo;
+        l->fim = novoNodo;
+    }
+    else{
+        TNodo *anterior = l->inicio;
+        for (int i = 0; i < posicao - 1; i++){
+            anterior = anterior->next;
+        }
+        novoNodo->next = anterior->next;
+        anterior->next = novoNodo;
+    }
+    l->tamanho++;
+}
+
+// Função para excluir um elemento de uma lista em uma dada posição
+void excluirElemento(lista l, int posicao){
+    if (posicao < 0 || posicao >= l->tamanho){
+        printf("Posição inválida!\n");
+        return;
+    }
+    TNodo *aux = NULL;
+    if (posicao == 0){
+        aux = l->inicio;
+        l->inicio = l->inicio->next;
+        if (l->tamanho == 1)
+            l->fim = NULL;
+    }
+    else{
+        TNodo *anterior = l->inicio;
+        for (int i = 0; i < posicao - 1; i++){
+            anterior = anterior->next;
+        }
+        aux = anterior->next;
+        anterior->next = aux->next;
+        if (posicao == l->tamanho - 1)
+            l->fim = anterior;
+    }
+    free(aux);
+    l->tamanho--;
+}
+
+// Função para verificar a existência de um elemento com uma determinada chave em uma lista ordenada
+TNodo *buscarElemento(lista l, TElemento chave){
+    TNodo *atual = l->inicio;
+    while (atual != NULL){
+        if (atual->info == chave)
+            return atual;
+        else
+            if (atual->info > chave)
+            return NULL;
+        atual = atual->next;
+    }
+    return NULL;
+}
+
+// Função para intercalar duas listas ordenadas e retornar uma nova lista ordenada
+lista intercalar(lista l1, lista l2){
+    lista resultado = (lista)malloc(sizeof(TLista));
+    resultado->inicio = resultado->fim = NULL;
+    resultado->tamanho = 0;
+
+    TNodo *atual1 = l1->inicio;
+    TNodo *atual2 = l2->inicio;
+
+    while (atual1 != NULL && atual2 != NULL){
+        if (atual1->info < atual2->info){
+            inserirElemento(resultado, resultado->tamanho, atual1->info);
+            atual1 = atual1->next;
+        }else{
+            inserirElemento(resultado, resultado->tamanho, atual2->info);
+            atual2 = atual2->next;
+        }
+    }
+
+    while (atual1 != NULL){
+        inserirElemento(resultado, resultado->tamanho, atual1->info);
+        atual1 = atual1->next;
+    }
+
+    while (atual2 != NULL){
+        inserirElemento(resultado, resultado->tamanho, atual2->info);
+        atual2 = atual2->next;
+    }
+
+    return resultado;
+}
+
+// Função para remover todos os nodos com campo info igual a um determinado valor
+void removerElemento(lista l, TElemento valor){
+    TNodo *atual = l->inicio;
+    TNodo *anterior = NULL;
+
+    while (atual != NULL){
+        if (atual->info == valor){
+            if (anterior == NULL){
+                l->inicio = atual->next;
+                free(atual);
+                atual = l->inicio;
+            }
+            else{
+                anterior->next = atual->next;
+                free(atual);
+                atual = anterior->next;
+            }
+            l->tamanho--;
+        }
+        else{
+            anterior = atual;
+            atual = atual->next;
+        }
+    }
+}
+
+// Função para encontrar o menor elemento da lista e movê-lo para o começo
+void moverMenorParaInicio(lista l){
+    if (l->tamanho <= 1)
+        return;
+    TNodo *menor = l->inicio;
+    TNodo *atual = l->inicio->next;
+
+    while (atual != NULL){
+        if (atual->info < menor->info)
+            menor = atual;
+        atual = atual->next;
+    }
+    if (menor != l->inicio){
+        // Remover o menor da lista
+        TNodo *anterior = l->inicio;
+        while (anterior->next != menor){
+            anterior = anterior->next;
+        }
+        anterior->next = menor->next;
+        // Mover o menor para o início
+        menor->next = l->inicio;
+        l->inicio = menor;
+    }
+}
+
+//main.c
+
+#include <stdio.h>
+#include <stdlib.h>
+#include "TADLista.h"
+
+    int main(){
+    // Exemplo de uso das funções
+    lista minhaLista = (lista)malloc(sizeof(TLista));
+    minhaLista->inicio = minhaLista->fim = NULL;
+    minhaLista->tamanho = 0;
+
+    inserirElemento(minhaLista, 0, 5);
+    inserirElemento(minhaLista, 1, 10);
+    inserirElemento(minhaLista, 2, 3);
+    inserirElemento(minhaLista, 3, 8);
+
+    printf("Lista original:\n");
+    TNodo *atual = minhaLista->inicio;
+    while (atual != NULL){
+        printf("%d ", atual->info);
+        atual = atual->next;
+    }
+    printf("\n");
+
+    inverterLista(minhaLista);
+    printf("Lista invertida:\n");
+    atual = minhaLista->inicio;
+    while (atual != NULL){
+        printf("%d ", atual->info);
+        atual = atual->next;
+    }
+    printf("\n");
+
+    if (estaOrdenada(minhaLista))
+        printf("A lista esta ordenada.\n");
+    else
+        printf("A lista nao esta ordenada.\n");
+
+    inserirElemento(minhaLista, 2, 7);
+    printf("Inserindo 7 na posicao 2:\n");
+    atual = minhaLista->inicio;
+    while (atual != NULL){
+        printf("%d ", atual->info);
+        atual = atual->next;
+    }
+    printf("\n");
+
+    excluirElemento(minhaLista, 1);
+    printf("Excluindo elemento na posicao 1:\n");
+    atual = minhaLista->inicio;
+    while (atual != NULL){
+        printf("%d ", atual->info);
+        atual = atual->next;
+    }
+    printf("\n");
+
+    TNodo *buscar = buscarElemento(minhaLista, 7);
+    if (buscar != NULL)
+        printf("Elemento 7 encontrado na lista.\n");
+    else
+        printf("Elemento 7 nao encontrado na lista.\n");
+
+    lista listaOrdenada1 = (lista)malloc(sizeof(TLista));
+    listaOrdenada1->inicio = listaOrdenada1->fim = NULL;
+    listaOrdenada1->tamanho = 0;
+    inserirElemento(listaOrdenada1, 0, 2);
+    inserirElemento(listaOrdenada1, 1, 4);
+    inserirElemento(listaOrdenada1, 2, 6);
+
+    lista listaOrdenada2 = (lista)malloc(sizeof(TLista));
+    listaOrdenada2->inicio = listaOrdenada2->fim = NULL;
+    listaOrdenada2->tamanho = 0;
+    inserirElemento(listaOrdenada2, 0, 1);
+    inserirElemento(listaOrdenada2, 1, 3);
+    inserirElemento(listaOrdenada2, 2, 5);
+
+    printf("Lista ordenada 1:\n");
+    atual = listaOrdenada1->inicio;
+    while (atual != NULL){
+        printf("%d ", atual->info);
+        atual = atual->next;
+    }
+    printf("\n");
+
+    printf("Lista ordenada 2:\n");
+    atual = listaOrdenada2->inicio;
+    while (atual != NULL)
+    {
+        printf("%d ", atual->info);
+        atual = atual->next;
+    }
+    printf("\n");
+
+    lista listaIntercalada = intercalar(listaOrdenada1, listaOrdenada2);
+    printf("Lista intercalada:\n");
+    atual = listaIntercalada->inicio;
+    while (atual != NULL)
+    {
+        printf("%d ", atual->info);
+        atual = atual->next;
+    }
+    printf("\n");
+
+    removerElemento(listaIntercalada, 3);
+    printf("Removendo elementos com valor 3:\n");
+    atual = listaIntercalada->inicio;
+    while (atual != NULL){
+        printf("%d ", atual->info);
+        atual = atual->next;
+    }
+    printf("\n");
+
+    moverMenorParaInicio(listaIntercalada);
+    printf("Movendo o menor elemento para o inicio:\n");
+    atual = listaIntercalada->inicio;
+    while (atual != NULL){
+        printf("%d ", atual->info);
+        atual = atual->next;
+    }
+    printf("\n");
+
+    return 0;
+}
+
