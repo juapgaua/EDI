@@ -1,0 +1,98 @@
+/*
+5) Agora escreva uma função em C para trocar os elementos das posições m e n de uma lista
+duplamente encadeada. Usar manipulação de ponteiros.
+Desenvolvido por Juliana Apgaua Sant'Ana Vidigal
+04/10/2023
+*/
+
+#include <stdio.h>
+#include <stdlib.h>
+
+// Definição da estrutura de um nó da lista duplamente encadeada
+typedef struct Nodo {
+    int data;
+    struct Nodo* next;
+    struct Nodo* ant;
+}TNodo;
+
+// Função para trocar os elementos nas posições m e n da lista
+void trocaElementos(TNodo** inicio, int m, int n) {
+    if (*inicio == NULL || m == n) {
+        return; // Nada a fazer se a lista estiver vazia ou as posições forem iguais
+    }
+
+    // Inicializar ponteiros para os nós a serem trocados
+    TNodo* nodoM = NULL;
+    TNodo* nodoN = NULL;
+
+    // Procurar pelos nós nas posições m e n
+    TNodo* atual = *inicio;
+    while (atual != NULL) {
+        if (atual->data == m) {
+            nodoM = atual;
+        }
+        if (atual->data == n) {
+            nodoN = atual;
+        }
+        atual = atual->next;
+    }
+
+    // Verificar se os nós foram encontrados
+    if (nodoM == NULL || nodoN == NULL) {
+        printf("Os elementos nas posições m e n não foram encontrados.\n");
+        return;
+    }
+
+    // Trocar os dados dos nós
+    int aux = nodoM->data;
+    nodoM->data = nodoN->data;
+    nodoN->data = aux;
+}
+
+// Função para imprimir a lista
+void imprimeLista(TNodo* inicio) {
+    while (inicio) {
+        printf("%d ", inicio->data);
+        inicio = inicio->next;
+    }
+    printf("\n");
+}
+
+int main() {
+    // Exemplo de criação de uma lista duplamente encadeada
+    TNodo* inicio = NULL;
+    TNodo* nodo1 = (TNodo*)malloc(sizeof(TNodo));
+    TNodo* nodo2 = (TNodo*)malloc(sizeof(TNodo));
+    TNodo* nodo3 = (TNodo*)malloc(sizeof(TNodo));
+
+    inicio = nodo1;
+    nodo1->data = 1;
+    nodo1->ant = NULL;
+    nodo1->next = nodo2;
+
+    nodo2->data = 2;
+    nodo2->ant = nodo1;
+    nodo2->next = nodo3;
+
+    nodo3->data = 3;
+    nodo3->ant = nodo2;
+    nodo3->next = NULL;
+
+    // Imprimir a lista antes da troca
+    printf("Lista antes da troca: ");
+    imprimeLista(inicio);
+
+    // Chamar a função para trocar os elementos 2 e 3
+    trocaElementos(&inicio, 2, 3);
+
+    // Imprimir a lista após a troca
+    printf("Lista após a troca: ");
+    imprimeLista(inicio);
+
+    // Liberar a memória alocada
+    free(nodo1);
+    free(nodo2);
+    free(nodo3);
+
+    return 0;
+}
